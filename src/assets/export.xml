@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KISDZStammdaten formatversion="1.0" erzeugt_von="FIS Datenaufbereitung für KIS im Zug"
+                 erzeugt_am="2022-08-24T11:47:28.616+02:00" zielsystem="RailvoxRTZ" mandant="RhB" kisdz_id="0"
+                 fahrplanversion="Fahrplan 2022">
+  <SprachenListe>
+    <Sprache id="0" co="de" be="Deutsch"/>
+    <Sprache id="4087" co="en" be="Englisch"/>
+    <Sprache id="4154" co="cn" be="Chinesisch"/>
+    <Sprache id="5257" co="sv" be="Sursilvan"/>
+    <Sprache id="6066" co="va" be="Vallader"/>
+    <Sprache id="6128" co="pu" be="Puter"/>
+    <Sprache id="21117" co="it" be="Italienisch"/>
+    <Sprache id="27204" co="fr" be="Franzoesisch"/>
+    <Sprache id="29158" co="jp" be="Japanisch"/>
+  </SprachenListe>
+  <VariantenPool gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">
+    <AudioVariantenListe>
+      <AV dn="G_MGGONG.mp3" fo="audio/mpeg3" id="4091" sp_id="0"/>
+    </AudioVariantenListe>
+    <BildVariantenListe>
+      <BV dn="TFT_Bus_AS_titel.svg" fo="image//svg" id="4113"/>
+    </BildVariantenListe>
+    <TextVariantenListe>
+      <TV tx="Davos Dorf" id="4106"/>
+    </TextVariantenListe>
+  </VariantenPool>
+  <SondermeldungListe gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">
+    <SMG kc="ANS+ANZ_1" name="Türfreigabe verzögert">
+      <SM id="30818" am_id="40" am_kc="ela.Sonder" name="Türfreigabe verzögert" sp_id="0">
+        <AMV pl="0" v_id="4091"/>
+        <AMV pl="0" v_id="30819"/>
+      </SM>
+      <SM id="30820" am_id="64" am_kc="screen.Text.Sonder" name="Türfreigabe verzögert" sp_id="0">
+        <TMV v_id="30821"/>
+      </SM>
+      <SM id="30822" am_id="32" am_kc="bt.Sonder" name="Türfreigabe verzögert" sp_id="0">
+        <TMV v_id="30823"/>
+      </SM>
+    </SMG>
+  </SondermeldungListe>
+  <MeldungListe gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">
+    <M id="4090" am_id="36" am_kc="ela.Innen" name="Davos Platz" sp_id="0">
+      <AMV pl="0" v_id="4091"/>
+      <AMV pl="0" v_id="4092"/>
+    </M>
+    <M id="4105" am_id="50" am_kc="screen.Perlschnur.AktuellerHalt" name="Davos Platz">
+      <TMV v_id="4106"/>
+    </M>
+  </MeldungListe>
+  <Netz gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">
+    <BetriebspunktListe>
+      <BP id="4086" ak="DAV" kn="true" kx="185025.0" ky="781875.0" ul="85" di="9073" xh="N" yh="E" tr="300.0"
+          name="Davos Platz">
+        <SP sp_id="0"/>
+        <SP sp_id="4087"/>
+      </BP>
+    </BetriebspunktListe>
+    <StreckenabschnittListe>
+      <SA id="4088" bb_id="4086" bn_id="4089" di="2669"/>
+      <SA id="4161" bb_id="4089" bn_id="4162" di="3635"/>
+    </StreckenabschnittListe>
+  </Netz>
+  <Fahrplan gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">
+    <VerkehrsperiodeListe>
+      <VP id="4085" co="66*"
+          fm="0000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000"/>
+    </VerkehrsperiodeListe>
+
+    <TL nr="4084">
+      <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4085">
+        <P bp_id="4086" bz="05:00:00.000" ty="1" s_id="4088">
+          <T kc="zeitstation" po="2" pl="0">
+            <TP na="zeitvor" we="120"/>
+            <MR m_id="4090"/>
+            <MR m_id="4099"/>
+            <MR m_id="4156"/>
+          </T>
+          <TR z_id="203"/>
+        </P>
+        <P bp_id="4086" nz="05:03:00.000" bz="05:04:00.000" ty="1" s_id="4161">
+          <T kc="distanz" po="1" pl="0">
+            <TP na="distanzvor" we="1000"/>
+            <MR m_id="4132"/>
+            <MR m_id="4163"/>
+            <MR m_id="4164"/>
+            <MR m_id="4165"/>
+            <MR m_id="4166"/>
+            <MR m_id="4167"/>
+            <MR m_id="4169"/>
+            <MR m_id="4171"/>
+            <MR m_id="4175"/>
+            <MR m_id="4193"/>
+          </T>
+          <TR z_id="203"/>
+        </P>
+        <P bp_id="4086" nz="05:09:00.000" bz="05:09:00.000" ty="3" s_id="4197">
+          <T kc="distanz" po="1" pl="0">
+            <TP na="distanzvor" we="1800"/>
+            <MR m_id="4132"/>
+            <MR m_id="4163"/>
+            <MR m_id="4199"/>
+            <MR m_id="4200"/>
+            <MR m_id="4201"/>
+            <MR m_id="4202"/>
+            <MR m_id="4204"/>
+            <MR m_id="4206"/>
+            <MR m_id="4208"/>
+            <MR m_id="4224"/>
+          </T>
+          <T kc="distanz" po="3" pl="0">
+            <TP na="distanznach" we="300"/>
+            <MR m_id="4211"/>
+            <MR m_id="4107"/>
+            <MR m_id="4213"/>
+            <MR m_id="4214"/>
+            <MR m_id="4116"/>
+            <MR m_id="4226"/>
+          </T>
+          <T kc="zeitevent" po="2" pl="0">
+            <TP na="zeitnach" we="10"/>
+            <MR m_id="4215"/>
+            <MR m_id="4217"/>
+            <MR m_id="4186"/>
+            <MR m_id="4214"/>
+            <MR m_id="4218"/>
+            <MR m_id="4220"/>
+            <MR m_id="4222"/>
+            <MR m_id="4160"/>
+          </T>
+          <TR z_id="203"/>
+        </P>
+        <P bp_id="4086" nz="05:14:00.000" bz="05:14:00.000" ty="3" s_id="4228">
+          <T kc="distanz" po="1" pl="0">
+            <TP na="distanzvor" we="1400"/>
+            <MR m_id="4132"/>
+            <MR m_id="4163"/>
+            <MR m_id="4230"/>
+            <MR m_id="4231"/>
+            <MR m_id="4232"/>
+            <MR m_id="4233"/>
+            <MR m_id="4235"/>
+            <MR m_id="4237"/>
+            <MR m_id="4238"/>
+            <MR m_id="4254"/>
+          </T>
+          <T kc="distanz" po="3" pl="0">
+            <TP na="distanznach" we="300"/>
+            <MR m_id="4240"/>
+            <MR m_id="4107"/>
+            <MR m_id="4242"/>
+            <MR m_id="4243"/>
+            <MR m_id="4112"/>
+            <MR m_id="4244"/>
+            <MR m_id="4116"/>
+            <MR m_id="4256"/>
+          </T>
+          <T kc="zeitevent" po="2" pl="0">
+            <TP na="zeitnach" we="10"/>
+            <MR m_id="4246"/>
+            <MR m_id="4248"/>
+            <MR m_id="4186"/>
+            <MR m_id="4243"/>
+            <MR m_id="4249"/>
+            <MR m_id="4251"/>
+            <MR m_id="4253"/>
+            <MR m_id="4160"/>
+          </T>
+          <TR z_id="203"/>
+        </P>
+      </Z>
+    </TL>
+  </Fahrplan>
+</KISDZStammdaten>
