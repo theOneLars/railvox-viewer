@@ -54,6 +54,11 @@
         <SP sp_id="0"/>
         <SP sp_id="4087"/>
       </BP>
+      <BP id="4087" ak="DAD" kn="false" kx="187117.0" ky="783432.0" ul="85" di="9072" xh="N" yh="E" tr="300.0"
+          name="Davos Dorf">
+        <SP sp_id="0"/>
+        <SP sp_id="4087"/>
+      </BP>
     </BetriebspunktListe>
     <StreckenabschnittListe>
       <SA id="4088" bb_id="4086" bn_id="4089" di="2669"/>
@@ -65,7 +70,6 @@
       <VP id="4085" co="66*"
           fm="0000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000"/>
     </VerkehrsperiodeListe>
-
     <TL nr="4084">
       <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4085">
         <P bp_id="4086" bz="05:00:00.000" ty="1" s_id="4088">
@@ -77,7 +81,7 @@
           </T>
           <TR z_id="203"/>
         </P>
-        <P bp_id="4086" nz="05:03:00.000" bz="05:04:00.000" ty="1" s_id="4161">
+        <P bp_id="4087" nz="05:03:00.000" bz="05:04:00.000" ty="1" s_id="4161">
           <T kc="distanz" po="1" pl="0">
             <TP na="distanzvor" we="1000"/>
             <MR m_id="4132"/>
@@ -93,77 +97,59 @@
           </T>
           <TR z_id="203"/>
         </P>
-        <P bp_id="4086" nz="05:09:00.000" bz="05:09:00.000" ty="3" s_id="4197">
-          <T kc="distanz" po="1" pl="0">
-            <TP na="distanzvor" we="1800"/>
-            <MR m_id="4132"/>
-            <MR m_id="4163"/>
-            <MR m_id="4199"/>
-            <MR m_id="4200"/>
-            <MR m_id="4201"/>
-            <MR m_id="4202"/>
-            <MR m_id="4204"/>
-            <MR m_id="4206"/>
-            <MR m_id="4208"/>
-            <MR m_id="4224"/>
-          </T>
-          <T kc="distanz" po="3" pl="0">
-            <TP na="distanznach" we="300"/>
-            <MR m_id="4211"/>
-            <MR m_id="4107"/>
-            <MR m_id="4213"/>
-            <MR m_id="4214"/>
-            <MR m_id="4116"/>
-            <MR m_id="4226"/>
-          </T>
-          <T kc="zeitevent" po="2" pl="0">
-            <TP na="zeitnach" we="10"/>
-            <MR m_id="4215"/>
-            <MR m_id="4217"/>
-            <MR m_id="4186"/>
-            <MR m_id="4214"/>
-            <MR m_id="4218"/>
-            <MR m_id="4220"/>
-            <MR m_id="4222"/>
-            <MR m_id="4160"/>
+      </Z>
+      <Z id="203" zn="1009" dk="DAV-LQ-CH" vp_id="4085">
+        <P bp_id="4086" bz="05:00:00.000" ty="1" s_id="4088">
+          <T kc="zeitstation" po="2" pl="0">
+            <TP na="zeitvor" we="120"/>
+            <MR m_id="4090"/>
+            <MR m_id="4099"/>
+            <MR m_id="4156"/>
           </T>
           <TR z_id="203"/>
         </P>
-        <P bp_id="4086" nz="05:14:00.000" bz="05:14:00.000" ty="3" s_id="4228">
+        <P bp_id="4087" nz="05:03:00.000" bz="05:04:00.000" ty="1" s_id="4161">
           <T kc="distanz" po="1" pl="0">
-            <TP na="distanzvor" we="1400"/>
+            <TP na="distanzvor" we="1000"/>
             <MR m_id="4132"/>
             <MR m_id="4163"/>
-            <MR m_id="4230"/>
-            <MR m_id="4231"/>
-            <MR m_id="4232"/>
-            <MR m_id="4233"/>
-            <MR m_id="4235"/>
-            <MR m_id="4237"/>
-            <MR m_id="4238"/>
-            <MR m_id="4254"/>
+            <MR m_id="4164"/>
+            <MR m_id="4165"/>
+            <MR m_id="4166"/>
+            <MR m_id="4167"/>
+            <MR m_id="4169"/>
+            <MR m_id="4171"/>
+            <MR m_id="4175"/>
+            <MR m_id="4193"/>
           </T>
-          <T kc="distanz" po="3" pl="0">
-            <TP na="distanznach" we="300"/>
-            <MR m_id="4240"/>
-            <MR m_id="4107"/>
-            <MR m_id="4242"/>
-            <MR m_id="4243"/>
-            <MR m_id="4112"/>
-            <MR m_id="4244"/>
-            <MR m_id="4116"/>
-            <MR m_id="4256"/>
+          <TR z_id="203"/>
+        </P>
+      </Z>
+    </TL>
+    <TL nr="4085">
+      <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4085">
+        <P bp_id="4086" bz="05:00:00.000" ty="1" s_id="4088">
+          <T kc="zeitstation" po="2" pl="0">
+            <TP na="zeitvor" we="120"/>
+            <MR m_id="4090"/>
+            <MR m_id="4099"/>
+            <MR m_id="4156"/>
           </T>
-          <T kc="zeitevent" po="2" pl="0">
-            <TP na="zeitnach" we="10"/>
-            <MR m_id="4246"/>
-            <MR m_id="4248"/>
-            <MR m_id="4186"/>
-            <MR m_id="4243"/>
-            <MR m_id="4249"/>
-            <MR m_id="4251"/>
-            <MR m_id="4253"/>
-            <MR m_id="4160"/>
+          <TR z_id="203"/>
+        </P>
+        <P bp_id="4087" nz="05:03:00.000" bz="05:04:00.000" ty="1" s_id="4161">
+          <T kc="distanz" po="1" pl="0">
+            <TP na="distanzvor" we="1000"/>
+            <MR m_id="4132"/>
+            <MR m_id="4163"/>
+            <MR m_id="4164"/>
+            <MR m_id="4165"/>
+            <MR m_id="4166"/>
+            <MR m_id="4167"/>
+            <MR m_id="4169"/>
+            <MR m_id="4171"/>
+            <MR m_id="4175"/>
+            <MR m_id="4193"/>
           </T>
           <TR z_id="203"/>
         </P>

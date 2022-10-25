@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-// import {Parser} from 'xml2js';
+import {Betriebspunkt} from "../../model/betriebspunkt";
+import {XMLParser} from "fast-xml-parser";
+import {Tagesleistung} from "../../model/tagesleistung";
+import {Zug} from "../../model/zug";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -9,59 +12,65 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 })
 export class RailvoxParserComponent implements OnInit {
 
-  public xmlItems: any;
+  title: string = '';
+  betriebspunkById = new Map<string, Betriebspunkt>();
+  tagesLeistungen: Tagesleistung[] = [];
 
   constructor(private http: HttpClient) {
-    // this.loadXML();
+    this.loadXML();
   }
 
-  // //getting data function
-  // loadXML(): void {
-  //   /*Read Data*/
-  //   this.http.get('assets/users.xml',
-  //     {
-  //       headers: new HttpHeaders()
-  //         .set('Content-Type', 'text/xml')
-  //         .append('Access-Control-Allow-Methods', 'GET')
-  //         .append('Access-Control-Allow-Origin', '*')
-  //         .append('Access-Control-Allow-Headers', "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method"),
-  //       responseType: 'text'
-  //     })
-  //     .subscribe((data) => {
-  //       this.parseXML(data)
-  //         .then((data: any) => {
-  //           this.xmlItems = data;
-  //           console.log(this.xmlItems);
-  //         });
-  //     });
-  //   /*Read Data*/
-  // }
-  //
-  // //store xml data into array variable
-  // parseXML(data: string): any {
-  //   return new Promise(resolve => {
-  //     var k: string | number,
-  //       arr: any[] = [],
-  //       parser = new Parser(
-  //         {
-  //           trim: true,
-  //           explicitArray: true
-  //         });
-  //     parser.parseString(data, function (err: any, result: any) {
-  //       var obj = result.Employee;
-  //       for (k in obj.emp) {
-  //         var item = obj.emp[k];
-  //         arr.push({
-  //           id: item.id[0],
-  //           name: item.name[0],
-  //           email: item.email[0],
-  //
-  //         });
-  //       }
-  //       resolve(arr);
-  //     });
-  //   });
-  // }
+  //getting data function
+  loadXML(): void {
+    /*Read Data*/
+    this.http.get('assets/export.xml',
+      {
+        headers: new HttpHeaders()
+          .set('Content-Type', 'text/xml')
+          .append('Access-Control-Allow-Methods', 'GET')
+          .append('Access-Control-Allow-Origin', '*')
+          .append('Access-Control-Allow-Headers', "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method"),
+        responseType: 'text'
+      })
+      .subscribe((data) => {
+        this.parseExport(data);
+      });
+  }
+
+  public parseExport(data: string) {
+    const options = {
+      ignoreAttributes: false,
+      allowBooleanAttributes: true,
+      attributeNamePrefix: "@_"
+    };
+    let fastXmlParser = new XMLParser(options);
+    let parsedXML = fastXmlParser.parse(data, {});
+
+    console.info('parsed xml', parsedXML);
+
+    this.title = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem']
+    this.mapBetriebspunkte(parsedXML.KISDZStammdaten.Netz.BetriebspunktListe.BP);
+    this.mapTagesLeistungen(parsedXML.KISDZStammdaten.Fahrplan.TL)
+  }
+
+  private mapBetriebspunkte(betriebspunkte: any[]): void {
+    betriebspunkte.forEach(it => this.betriebspunkById.set(it['@_id'], new Betriebspunkt(it['@_name'], it['@_ak'])));
+  }
+
+  private mapTagesLeistungen(tagesleistungen: any[]) {
+    console.info(tagesleistungen);
+    tagesleistungen.forEach((tagesleistung) => {
+      let zuege: any[] = [];
+      zuege.push(tagesleistung.Z);
+      let trains: Zug[] = [];
+      zuege.forEach((zug: any) => {
+        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], []))
+      });
+      let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
+      this.tagesLeistungen.push(tl);
+    });
+    console.info(this.tagesLeistungen);
+  }
 
   ngOnInit(): void {
   }

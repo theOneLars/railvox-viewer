@@ -1,1 +1,9 @@
-<p>railvox-parser works!</p>
+<mat-card>
+  <mat-card-title>{{this.title}}</mat-card-title>
+  <div *ngFor="let item of tagesLeistungen">
+    <tagesleistung-view
+      [tagesleistung]="item"
+    ></tagesleistung-view>
+  </div>
+
+</mat-card>
