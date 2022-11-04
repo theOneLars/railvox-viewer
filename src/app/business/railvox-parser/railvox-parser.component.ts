@@ -9,6 +9,7 @@ import {Trigger} from "../../model/trigger";
 import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
 import {FormControl, Validators} from "@angular/forms";
 import {MeldungVariante} from "../../model/meldung-variante";
+import {Sprache} from "../../model/sprache";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -24,6 +25,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
   betriebspunkById = new Map<string, Betriebspunkt>();
   streckenabschnitte = new Map<string, StreckenAbschnitt>();
   meldungVarianteById = new Map<string, MeldungVariante>();
+  spracheById = new Map<string, Sprache>();
   tagesLeistungen: Tagesleistung[] = [];
 
   filteredTagesleistungen: Tagesleistung[] = [];
@@ -36,8 +38,9 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     this.betriebspunkById = new Map<string, Betriebspunkt>();
     this.streckenabschnitte = new Map<string, StreckenAbschnitt>();
     this.meldungVarianteById = new Map<string, MeldungVariante>();
+    this.spracheById = new Map<string, Sprache>();
+      this.filteredTagesleistungen = [];
     this.tagesLeistungen = [];
-    this.filteredTagesleistungen = [];
   }
 
   //getting data function
@@ -62,6 +65,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     let parsedXML = this.parseXml(data);
     this.title = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem']
     this.betriebspunkById = this.mapBetriebspunkte(parsedXML);
+    this.spracheById = this.mapSprachen(parsedXML);
     this.meldungVarianteById = new Map([
       ...this.mapAudioMeldungVarianten(parsedXML),
       ...this.mapTextMeldungVarianten(parsedXML),
@@ -79,6 +83,16 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     };
     let fastXmlParser = new XMLParser(options);
     return fastXmlParser.parse(data, {});
+  }
+
+  public mapSprachen(parsedXML: any): Map<string, Sprache> {
+    let sprachen: any = this.ensureCollection(parsedXML.KISDZStammdaten.SprachenListe.Sprache);
+    let result = new Map<string, Sprache>();
+    sprachen.forEach((sprache: any) => {
+      result.set(sprache['@_id'], new Sprache(sprache['@_co'], sprache['@_be']));
+    })
+
+    return result;
   }
 
   public mapBetriebspunkte(parsedXML: any): Map<string, Betriebspunkt> {

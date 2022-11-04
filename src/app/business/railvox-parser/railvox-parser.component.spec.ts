@@ -8,6 +8,7 @@ import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
 import {MatCardModule} from "@angular/material/card";
 import {MeldungVariante} from "../../model/meldung-variante";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {Sprache} from "../../model/sprache";
 
 describe('RailvoxParserComponent', () => {
   let component: RailvoxParserComponent;
@@ -166,6 +167,22 @@ describe('RailvoxParserComponent', () => {
     expect(actual).toHaveSize(2);
     expect(actual.get('4904')).toEqual(new MeldungVariante('TextMeldung', '', '', 'Landquart'));
     expect(actual.get('4906')).toEqual(new MeldungVariante('TextMeldung', '', '', 'Abfahrt um: 12:00'));
+  });
+
+  it('should parse list of sprachen', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <SprachenListe>' +
+      '     <Sprache id="0" co="de" be="Deutsch"/>\n' +
+      '     <Sprache id="4884" co="en" be="Englisch"/>' +
+      '   </SprachenListe>' +
+      '</KISDZStammdaten>';
+    let parsedXml = component.parseXml(xml);
+    let actual = component.mapSprachen(parsedXml);
+
+    expect(actual).toHaveSize(2);
+    expect(actual.get('0')).toEqual(new Sprache('de', 'Deutsch'));
+    expect(actual.get('4884')).toEqual(new Sprache('en', 'Englisch'));
   });
 
 });
