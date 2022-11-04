@@ -9,13 +9,17 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatCardModule} from '@angular/material/card';
 import { TagesleistungViewComponent } from './view/tagesleistung-view/tagesleistung-view.component';
 import { ZugViewComponent } from './view/zug-view/zug-view.component';
+import { PassageViewComponent } from './view/passage-view/passage-view.component';
+import { TriggerViewComponent } from './view/trigger-view/trigger-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RailvoxParserComponent,
     TagesleistungViewComponent,
-    ZugViewComponent
+    ZugViewComponent,
+    PassageViewComponent,
+    TriggerViewComponent
   ],
   imports: [
     BrowserModule,

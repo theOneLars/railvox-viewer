@@ -1,0 +1,9 @@
+<mat-card>
+  <mat-card-content>
+    <p class="mat-card-subtitle">
+      <span>Trigger: {{trigger.typ}} - {{trigger.name}}: {{trigger.value}}</span>
+      <span *ngIf="trigger.typ === 'zeitstation'">s</span>
+      <span *ngIf="trigger.typ === 'distanz'">m</span>
+    </p>
+  </mat-card-content>
+</mat-card>

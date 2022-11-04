@@ -4,6 +4,8 @@ import {Betriebspunkt} from "../../model/betriebspunkt";
 import {XMLParser} from "fast-xml-parser";
 import {Tagesleistung} from "../../model/tagesleistung";
 import {Zug} from "../../model/zug";
+import {Passage} from "../../model/passage";
+import {Trigger} from "../../model/trigger";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -68,11 +70,32 @@ export class RailvoxParserComponent implements OnInit {
       let zuege = this.ensureCollection(tagesleistung.Z);
       let trains: Zug[] = [];
       zuege.forEach((zug: any) => {
-        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], []))
+        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], this.mapPassages(zug)))
       });
       let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
       result.push(tl);
     }
+    return result;
+  }
+
+  public mapPassages(zugJSON: any): Passage[] {
+    let passages = zugJSON.P;
+    let result: Passage[] = [];
+    passages.forEach((passage: any) => {
+      // @ts-ignore
+      let betriebspunkt: Betriebspunkt = this.betriebspunkById.get(passage['@_bp_id']);
+      let trigger = this.mapTrigger(passage);
+      result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz']));
+    });
+    return result
+  }
+
+  public mapTrigger(passageJSON: any): Trigger[] {
+    let triggers = this.ensureCollection(passageJSON.T);
+    let result: Trigger[] = [];
+    triggers.forEach((trigger: any) => {
+      result.push(new Trigger(trigger['@_kc'], trigger.TP['@_na'],trigger.TP['@_we']));
+    })
     return result;
   }
 

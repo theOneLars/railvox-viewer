@@ -1,0 +1,6 @@
+<mat-card>
+  <mat-card-title>{{this.formatAbfahrt()}} {{passage.betriebspunke.name}}</mat-card-title>
+  <mat-card-content>
+    <trigger-view *ngFor="let item of passage.trigger" [trigger]="item"></trigger-view>
+  </mat-card-content>
+</mat-card>
