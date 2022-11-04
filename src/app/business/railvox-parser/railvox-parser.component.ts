@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, Predicate} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Betriebspunkt} from "../../model/betriebspunkt";
 import {XMLParser} from "fast-xml-parser";
@@ -8,8 +8,9 @@ import {Passage} from "../../model/passage";
 import {Trigger} from "../../model/trigger";
 import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
 import {FormControl, Validators} from "@angular/forms";
-import {MeldungVariante} from "../../model/meldung-variante";
+import {MeldungVariante, VariantenType} from "../../model/meldung-variante";
 import {Sprache} from "../../model/sprache";
+import {Meldung} from "../../model/meldung";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -26,6 +27,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
   streckenabschnitte = new Map<string, StreckenAbschnitt>();
   meldungVarianteById = new Map<string, MeldungVariante>();
   spracheById = new Map<string, Sprache>();
+  meldungenById = new Map<string, Meldung>();
   tagesLeistungen: Tagesleistung[] = [];
 
   filteredTagesleistungen: Tagesleistung[] = [];
@@ -39,7 +41,8 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     this.streckenabschnitte = new Map<string, StreckenAbschnitt>();
     this.meldungVarianteById = new Map<string, MeldungVariante>();
     this.spracheById = new Map<string, Sprache>();
-      this.filteredTagesleistungen = [];
+    this.meldungenById = new Map<string, Meldung>();
+    this.filteredTagesleistungen = [];
     this.tagesLeistungen = [];
   }
 
@@ -70,7 +73,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
       ...this.mapAudioMeldungVarianten(parsedXML),
       ...this.mapTextMeldungVarianten(parsedXML),
       ...this.mapBildMeldungVarianten(parsedXML)]);
-    console.log('meldungVarianteById', this.meldungVarianteById);
+    this.meldungenById = this.mapMeldungen(parsedXML);
     this.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
     this.streckenabschnitte = this.mapStreckenabschnitte(parsedXML);
   }
@@ -93,6 +96,37 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     })
 
     return result;
+  }
+
+  mapMeldungen(parsedXML: any): Map<string, Meldung> {
+    let meldungen: any = this.ensureCollection(parsedXML.KISDZStammdaten.MeldungListe.M);
+    let result = new Map<string, Meldung>();
+    meldungen.forEach((meldung: any) => {
+      let varianten: MeldungVariante[] = [];
+      this.ensureCollection(meldung.AMV)
+        .filter(RailvoxParserComponent.notUndefined())
+        .forEach((amv: any) => varianten.push(<MeldungVariante> this.meldungVarianteById.get(amv['@_v_id'])))
+      this.ensureCollection(meldung.BMV).map((bmv: any) => bmv['@_v_id'])
+        .filter(RailvoxParserComponent.notUndefined())
+        .forEach((bmv: any) => varianten.push(<MeldungVariante> this.meldungVarianteById.get(bmv['@_v_id'])))
+      this.ensureCollection(meldung.TMV).map((tmv: any) => tmv['@_v_id'])
+        .filter(RailvoxParserComponent.notUndefined())
+        .map((tmv: any) => this.meldungVarianteById.get(tmv['@_v_id']));
+      // todo: add functionality for playlists
+      let playlistMeldungen = this.ensureCollection(meldung.PMV);
+      if (playlistMeldungen.length > 0) {
+        new Error('Not yet implemented');
+      }
+      let sprache: Sprache = <Sprache> this.spracheById.get(meldung['@_sp_id']);
+      result.set(meldung['@_id'],
+        new Meldung(varianten, meldung['@_name'], meldung['@_am_kc'], meldung['@_am_id'], sprache))
+    })
+
+    return result;
+  }
+
+  private static notUndefined(): Predicate<boolean> {
+    return (it: any) => typeof it !== 'undefined';
   }
 
   public mapBetriebspunkte(parsedXML: any): Map<string, Betriebspunkt> {
@@ -130,7 +164,8 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     let result = new Map<string, MeldungVariante>();
     let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.AudioVariantenListe.AV);
     meldungen.forEach((meldung: any) => {
-      result.set(meldung['@_id'], new MeldungVariante('AudioMeldung', meldung['@_fo'], meldung['@_dn'], ''));
+      let meldungVariante = new MeldungVariante(VariantenType.AudioMeldung, meldung['@_fo'], meldung['@_dn'], '', this.spracheById.get(meldung['@_sp_id']));
+      result.set(meldung['@_id'], meldungVariante);
     })
     return result;
   }
@@ -139,7 +174,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     let result = new Map<string, MeldungVariante>();
     let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.BildVariantenListe.BV);
     meldungen.forEach((meldung: any) => {
-      result.set(meldung['@_id'], new MeldungVariante('BildMeldung', meldung['@_fo'], meldung['@_dn'], ''));
+      result.set(meldung['@_id'], new MeldungVariante(VariantenType.BildMeldung, meldung['@_fo'], meldung['@_dn'], ''));
     })
     return result;
   }
@@ -148,7 +183,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     let result = new Map<string, MeldungVariante>();
     let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.TextVariantenListe.TV);
     meldungen.forEach((meldung: any) => {
-      result.set(meldung['@_id'], new MeldungVariante('TextMeldung', '', '', meldung['@_tx']));
+      result.set(meldung['@_id'], new MeldungVariante(VariantenType.TextMeldung, '', '', meldung['@_tx']));
     })
     return result;
   }
@@ -177,11 +212,11 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     let triggers = this.ensureCollection(passageJSON.T);
     let result: Trigger[] = [];
     triggers.forEach((trigger: any) => {
-
+      let meldungen = this.ensureCollection(trigger.MR).map((mr: any) => <Meldung> this.meldungenById.get(mr['@_m_id']));
       if (trigger && trigger.TP) {
-        result.push(new Trigger(trigger['@_kc'], trigger.TP['@_na'], trigger.TP['@_we']));
+        result.push(new Trigger(trigger['@_kc'], trigger.TP['@_na'], trigger.TP['@_we'], meldungen));
       } else if (trigger) {
-        result.push(new Trigger(trigger['@_kc'], 'no name', 'no value'));
+        result.push(new Trigger(trigger['@_kc'], '', '', meldungen));
       }
     })
     return result;
@@ -193,7 +228,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     }
     let result = [];
     result.push(items);
-    return result;
+    return result.filter(RailvoxParserComponent.notUndefined());
   }
 
   ngOnInit(): void {

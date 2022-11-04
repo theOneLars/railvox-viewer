@@ -1,0 +1,22 @@
+<p class="mat-card-subtitle">Meldung: {{meldung.name}} - {{meldung.outputMediumCode}} ({{meldung.outputMediumId}})
+  <span *ngIf="meldung.sprache">({{meldung.sprache.beschreibung}})</span>
+</p>
+
+<p class="mat-card-subtitle">Meldungsvarianten:</p>
+<mat-list>
+  <mat-list-item *ngFor="let variante of meldung.meldungVarianten">
+    <span *ngIf="isTextMeldungVariante(variante)">
+      <mat-icon>nest_display</mat-icon>
+       {{variante.text}}
+    </span>
+    <span *ngIf="isBildMeldungVariante(variante)">
+      <mat-icon>image</mat-icon>
+      {{variante.filename}} - {{variante.format}}
+    </span>
+    <span *ngIf="isAudioMeldungVariante(variante)">
+      <mat-icon>chat_bubble</mat-icon>
+      {{variante.filename}} - {{variante.format}}
+      <span *ngIf="variante.sprache">({{variante.sprache.beschreibung}})</span>
+    </span>
+  </mat-list-item>
+</mat-list>

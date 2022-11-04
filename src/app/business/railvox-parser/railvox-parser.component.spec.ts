@@ -6,7 +6,7 @@ import {Tagesleistung} from "../../model/tagesleistung";
 import {Zug} from "../../model/zug";
 import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
 import {MatCardModule} from "@angular/material/card";
-import {MeldungVariante} from "../../model/meldung-variante";
+import {MeldungVariante, VariantenType} from "../../model/meldung-variante";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {Sprache} from "../../model/sprache";
 
@@ -129,8 +129,8 @@ describe('RailvoxParserComponent', () => {
     let actual = component.mapBildMeldungVarianten(parsedXml);
 
     expect(actual).toHaveSize(2);
-    expect(actual.get('4902')).toEqual(new MeldungVariante('BildMeldung', 'image//svg', 'TFT_RhB10.svg', ''));
-    expect(actual.get('4943')).toEqual(new MeldungVariante('BildMeldung', 'image//svg', 'TFT_Bus_AS_titel.svg', ''));
+    expect(actual.get('4902')).toEqual(new MeldungVariante(VariantenType.BildMeldung, 'image//svg', 'TFT_RhB10.svg', ''));
+    expect(actual.get('4943')).toEqual(new MeldungVariante(VariantenType.BildMeldung, 'image//svg', 'TFT_Bus_AS_titel.svg', ''));
   });
 
   it('should parse list of audiovarianten', () => {
@@ -147,8 +147,8 @@ describe('RailvoxParserComponent', () => {
     let actual = component.mapAudioMeldungVarianten(parsedXml);
 
     expect(actual).toHaveSize(2);
-    expect(actual.get('34830')).toEqual(new MeldungVariante('AudioMeldung', 'audio/mpeg3', 'D_BE_AGZ2.mp3', ''));
-    expect(actual.get('34835')).toEqual(new MeldungVariante('AudioMeldung', 'audio/mpeg3', 'D_F072_1x.mp3', ''));
+    expect(actual.get('34830')).toEqual(new MeldungVariante(VariantenType.AudioMeldung, 'audio/mpeg3', 'D_BE_AGZ2.mp3', ''));
+    expect(actual.get('34835')).toEqual(new MeldungVariante(VariantenType.AudioMeldung, 'audio/mpeg3', 'D_F072_1x.mp3', ''));
   });
 
   it('should parse list of textvarianten', () => {
@@ -165,8 +165,8 @@ describe('RailvoxParserComponent', () => {
     let actual = component.mapTextMeldungVarianten(parsedXml);
 
     expect(actual).toHaveSize(2);
-    expect(actual.get('4904')).toEqual(new MeldungVariante('TextMeldung', '', '', 'Landquart'));
-    expect(actual.get('4906')).toEqual(new MeldungVariante('TextMeldung', '', '', 'Abfahrt um: 12:00'));
+    expect(actual.get('4904')).toEqual(new MeldungVariante(VariantenType.TextMeldung, '', '', 'Landquart'));
+    expect(actual.get('4906')).toEqual(new MeldungVariante(VariantenType.TextMeldung, '', '', 'Abfahrt um: 12:00'));
   });
 
   it('should parse list of sprachen', () => {

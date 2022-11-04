@@ -16,6 +16,9 @@ import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { MeldungViewComponent } from './view/meldung-view/meldung-view.component';
+import {MatListModule} from "@angular/material/list";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     TagesleistungViewComponent,
     ZugViewComponent,
     PassageViewComponent,
-    TriggerViewComponent
+    TriggerViewComponent,
+    MeldungViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +40,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatInputModule,
     ReactiveFormsModule,
     MatTabsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatListModule,
+    MatIconModule,
   ],
   providers: [HttpClient, {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]
