@@ -6,7 +6,6 @@ import {Tagesleistung} from "../../model/tagesleistung";
 import {Zug} from "../../model/zug";
 import {Passage} from "../../model/passage";
 import {Trigger} from "../../model/trigger";
-
 @Component({
   selector: 'app-railvox-parser',
   templateUrl: './railvox-parser.component.html',
@@ -16,7 +15,10 @@ export class RailvoxParserComponent implements OnInit {
 
   title: string = '';
   betriebspunkById = new Map<string, Betriebspunkt>();
+  streckenabschnitte= new Map<string, StreckenAbschnitt>();
   tagesLeistungen: Tagesleistung[] = [];
+
+
 
   constructor(private http: HttpClient) {
     this.loadXML();
@@ -43,7 +45,8 @@ export class RailvoxParserComponent implements OnInit {
     let parsedXML = this.parseXml(data);
     this.title = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem']
     this.betriebspunkById = this.mapBetriebspunkte(parsedXML);
-    this.tagesLeistungen = this.mapTagesLeistungen(parsedXML)
+    this.streckenabschnitte = this.mapStreckenabschnitte(parsedXML);
+    this.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
   }
 
   public parseXml(data: string) {
@@ -60,6 +63,15 @@ export class RailvoxParserComponent implements OnInit {
     let betriebspunkte: any = this.ensureCollection(parsedXML.KISDZStammdaten.Netz.BetriebspunktListe.BP);
     let result = new Map<string, Betriebspunkt>();
     betriebspunkte.forEach((it: any) => result.set(it['@_id'], new Betriebspunkt(it['@_name'], it['@_ak'])));
+    return result;
+  }
+
+  public mapStreckenabschnitte(parsedXML: any): Map<string, StreckenAbschnitt> {
+    let streckenabschnitte: any = this.ensureCollection(parsedXML.KISDZStammdaten.Netz.StreckenabschnittListe.SA);
+    let result = new Map<string, StreckenAbschnitt>();
+    streckenabschnitte.forEach((streckenabschnitt: any) => {
+      result.set(streckenabschnitt['@_id'], new StreckenAbschnitt(streckenabschnitt['@_di']))
+    })
     return result;
   }
 
@@ -84,8 +96,16 @@ export class RailvoxParserComponent implements OnInit {
     passages.forEach((passage: any) => {
       // @ts-ignore
       let betriebspunkt: Betriebspunkt = this.betriebspunkById.get(passage['@_bp_id']);
+      if (typeof betriebspunkt === 'undefined') {
+        console.error('Could not find Betriebspunkt witd id: ', passage['@_bp_id']);
+      }
+      // @ts-ignore
+      let streckenabschnitt: StreckenAbschnitt = this.streckenabschnitte.get(passage['@_s_id']);
+      if (typeof streckenabschnitt === 'undefined') {
+        console.error('Could not find Streckenabschnitt witd id: ', passage['@_s_id']);
+      }
       let trigger = this.mapTrigger(passage);
-      result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz']));
+      result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz'], streckenabschnitt));
     });
     return result
   }
@@ -112,3 +132,5 @@ export class RailvoxParserComponent implements OnInit {
   }
 
 }
+
+import {StreckenAbschnitt} from "../../model/strecken-abschnitt";

@@ -4,6 +4,8 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {Betriebspunkt} from "../../model/betriebspunkt";
 import {Tagesleistung} from "../../model/tagesleistung";
 import {Zug} from "../../model/zug";
+import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
+import {MatCardModule} from "@angular/material/card";
 
 describe('RailvoxParserComponent', () => {
   let component: RailvoxParserComponent;
@@ -12,7 +14,7 @@ describe('RailvoxParserComponent', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule],
+      imports: [HttpClientModule, MatCardModule],
       providers: [HttpClient],
       declarations: [RailvoxParserComponent]
     }).compileComponents();
@@ -90,6 +92,24 @@ describe('RailvoxParserComponent', () => {
       new Zug('DAV-LQ', '203', '4085', '1008', [])], '4085');
     expect(actual[0]).toEqual(expectedTl0);
     expect(actual[1]).toEqual(expectedTl1);
+  });
+
+  it('should parse list of streckenabschnitte', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <Netz>' +
+      '   <StreckenabschnittListe>' +
+      '      <SA id="4088" bb_id="4086" bn_id="4089" di="2669"/>' +
+      '      <SA id="4161" bb_id="4089" bn_id="4162" di="3635"/> ' +
+      '  </StreckenabschnittListe>' +
+      '   </Netz>' +
+      '</KISDZStammdaten>';
+    let parsedXml = component.parseXml(xml);
+    let actual = component.mapStreckenabschnitte(parsedXml);
+
+    expect(actual).toHaveSize(2);
+    expect(actual.get('4088')).toEqual(new StreckenAbschnitt('2669'));
+    expect(actual.get('4161')).toEqual(new StreckenAbschnitt('3635'));
   });
 
 });
