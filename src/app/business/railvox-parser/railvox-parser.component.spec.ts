@@ -6,6 +6,8 @@ import {Tagesleistung} from "../../model/tagesleistung";
 import {Zug} from "../../model/zug";
 import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
 import {MatCardModule} from "@angular/material/card";
+import {MeldungVariante} from "../../model/meldung-variante";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 describe('RailvoxParserComponent', () => {
   let component: RailvoxParserComponent;
@@ -14,7 +16,7 @@ describe('RailvoxParserComponent', () => {
   beforeEach(async () => {
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, MatCardModule],
+      imports: [HttpClientModule, MatCardModule, MatProgressSpinnerModule],
       providers: [HttpClient],
       declarations: [RailvoxParserComponent]
     }).compileComponents();
@@ -110,6 +112,60 @@ describe('RailvoxParserComponent', () => {
     expect(actual).toHaveSize(2);
     expect(actual.get('4088')).toEqual(new StreckenAbschnitt('2669'));
     expect(actual.get('4161')).toEqual(new StreckenAbschnitt('3635'));
+  });
+
+  it('should parse list of bildvarianten', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <VariantenPool>' +
+      '   <BildVariantenListe>' +
+      '      <BV dn="TFT_RhB10.svg" fo="image//svg" id="4902"/>' +
+      '      <BV dn="TFT_Bus_AS_titel.svg" fo="image//svg" id="4943"/>' +
+      '  </BildVariantenListe>' +
+      '   </VariantenPool>' +
+      '</KISDZStammdaten>';
+    let parsedXml = component.parseXml(xml);
+    let actual = component.mapBildMeldungVarianten(parsedXml);
+
+    expect(actual).toHaveSize(2);
+    expect(actual.get('4902')).toEqual(new MeldungVariante('BildMeldung', 'image//svg', 'TFT_RhB10.svg', ''));
+    expect(actual.get('4943')).toEqual(new MeldungVariante('BildMeldung', 'image//svg', 'TFT_Bus_AS_titel.svg', ''));
+  });
+
+  it('should parse list of audiovarianten', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <VariantenPool>' +
+      '     <AudioVariantenListe>' +
+      '       <AV dn="D_BE_AGZ2.mp3" fo="audio/mpeg3" id="34830"/>' +
+      '      <AV dn="D_F072_1x.mp3" fo="audio/mpeg3" id="34835"/>' +
+      '   </AudioVariantenListe>' +
+      '   </VariantenPool>' +
+      '</KISDZStammdaten>';
+    let parsedXml = component.parseXml(xml);
+    let actual = component.mapAudioMeldungVarianten(parsedXml);
+
+    expect(actual).toHaveSize(2);
+    expect(actual.get('34830')).toEqual(new MeldungVariante('AudioMeldung', 'audio/mpeg3', 'D_BE_AGZ2.mp3', ''));
+    expect(actual.get('34835')).toEqual(new MeldungVariante('AudioMeldung', 'audio/mpeg3', 'D_F072_1x.mp3', ''));
+  });
+
+  it('should parse list of textvarianten', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <VariantenPool>' +
+      '     <TextVariantenListe>' +
+      '       <TV tx="Landquart" id="4904"/>' +
+      '       <TV tx="Abfahrt um: 12:00" id="4906"/>' +
+      '     </TextVariantenListe>' +
+      '   </VariantenPool>' +
+      '</KISDZStammdaten>';
+    let parsedXml = component.parseXml(xml);
+    let actual = component.mapTextMeldungVarianten(parsedXml);
+
+    expect(actual).toHaveSize(2);
+    expect(actual.get('4904')).toEqual(new MeldungVariante('TextMeldung', '', '', 'Landquart'));
+    expect(actual.get('4906')).toEqual(new MeldungVariante('TextMeldung', '', '', 'Abfahrt um: 12:00'));
   });
 
 });

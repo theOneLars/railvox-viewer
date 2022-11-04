@@ -8,6 +8,7 @@ import {Passage} from "../../model/passage";
 import {Trigger} from "../../model/trigger";
 import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
 import {FormControl, Validators} from "@angular/forms";
+import {MeldungVariante} from "../../model/meldung-variante";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -22,6 +23,7 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
   title: string = '';
   betriebspunkById = new Map<string, Betriebspunkt>();
   streckenabschnitte = new Map<string, StreckenAbschnitt>();
+  meldungVarianteById = new Map<string, MeldungVariante>();
   tagesLeistungen: Tagesleistung[] = [];
 
   filteredTagesleistungen: Tagesleistung[] = [];
@@ -33,9 +35,10 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.betriebspunkById = new Map<string, Betriebspunkt>();
     this.streckenabschnitte = new Map<string, StreckenAbschnitt>();
+    this.meldungVarianteById = new Map<string, MeldungVariante>();
     this.tagesLeistungen = [];
     this.filteredTagesleistungen = [];
-    }
+  }
 
   //getting data function
   loadXML(): void {
@@ -59,8 +62,13 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     let parsedXML = this.parseXml(data);
     this.title = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem']
     this.betriebspunkById = this.mapBetriebspunkte(parsedXML);
-    this.streckenabschnitte = this.mapStreckenabschnitte(parsedXML);
+    this.meldungVarianteById = new Map([
+      ...this.mapAudioMeldungVarianten(parsedXML),
+      ...this.mapTextMeldungVarianten(parsedXML),
+      ...this.mapBildMeldungVarianten(parsedXML)]);
+    console.log('meldungVarianteById', this.meldungVarianteById);
     this.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
+    this.streckenabschnitte = this.mapStreckenabschnitte(parsedXML);
   }
 
   public parseXml(data: string) {
@@ -104,20 +112,49 @@ export class RailvoxParserComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  public mapAudioMeldungVarianten(parsedXML: any): Map<string, MeldungVariante> {
+    let result = new Map<string, MeldungVariante>();
+    let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.AudioVariantenListe.AV);
+    meldungen.forEach((meldung: any) => {
+      result.set(meldung['@_id'], new MeldungVariante('AudioMeldung', meldung['@_fo'], meldung['@_dn'], ''));
+    })
+    return result;
+  }
+
+  public mapBildMeldungVarianten(parsedXML: any): Map<string, MeldungVariante> {
+    let result = new Map<string, MeldungVariante>();
+    let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.BildVariantenListe.BV);
+    meldungen.forEach((meldung: any) => {
+      result.set(meldung['@_id'], new MeldungVariante('BildMeldung', meldung['@_fo'], meldung['@_dn'], ''));
+    })
+    return result;
+  }
+
+  public mapTextMeldungVarianten(parsedXML: any): Map<string, MeldungVariante> {
+    let result = new Map<string, MeldungVariante>();
+    let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.TextVariantenListe.TV);
+    meldungen.forEach((meldung: any) => {
+      result.set(meldung['@_id'], new MeldungVariante('TextMeldung', '', '', meldung['@_tx']));
+    })
+    return result;
+  }
+
   public mapPassages(zugJSON: any): Passage[] {
-    let passages = zugJSON.P;
+    let passages = this.ensureCollection(zugJSON.P);
     let result: Passage[] = [];
     passages.forEach((passage: any) => {
-      // @ts-ignore
-      let betriebspunkt: Betriebspunkt = this.betriebspunkById.get(passage['@_bp_id']);
-      if (typeof betriebspunkt === 'undefined') {
-        console.error('Could not find Betriebspunkt witd id: ', passage['@_bp_id']);
-        betriebspunkt = new Betriebspunkt('Not existing Betriebspunkt', "NONE")
+      if (passage) {
+        // @ts-ignore
+        let betriebspunkt: Betriebspunkt = this.betriebspunkById.get(passage['@_bp_id']);
+        if (typeof betriebspunkt === 'undefined') {
+          console.error('Could not find Betriebspunkt witd id: ', passage['@_bp_id']);
+          betriebspunkt = new Betriebspunkt('Not existing Betriebspunkt', "NONE")
+        }
+        // @ts-ignore
+        let streckenabschnitt: StreckenAbschnitt = this.streckenabschnitte.get(passage['@_s_id']);
+        let trigger = this.mapTrigger(passage);
+        result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz'], streckenabschnitt));
       }
-      // @ts-ignore
-      let streckenabschnitt: StreckenAbschnitt = this.streckenabschnitte.get(passage['@_s_id']);
-      let trigger = this.mapTrigger(passage);
-      result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz'], streckenabschnitt));
     });
     return result
   }
