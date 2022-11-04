@@ -55,25 +55,33 @@ export class RailvoxParserComponent implements OnInit {
   }
 
   public mapBetriebspunkte(parsedXML: any): Map<string, Betriebspunkt> {
-    let betriebspunkte: any = parsedXML.KISDZStammdaten.Netz.BetriebspunktListe.BP;
+    let betriebspunkte: any = this.ensureCollection(parsedXML.KISDZStammdaten.Netz.BetriebspunktListe.BP);
     let result = new Map<string, Betriebspunkt>();
     betriebspunkte.forEach((it: any) => result.set(it['@_id'], new Betriebspunkt(it['@_name'], it['@_ak'])));
     return result;
   }
 
-  protected mapTagesLeistungen(parsedXML: any): Tagesleistung[]  {
-    let tagesleistungen = parsedXML.KISDZStammdaten.Fahrplan.TL
+  public mapTagesLeistungen(parsedXML: any): Tagesleistung[] {
+    let tagesleistungen = this.ensureCollection(parsedXML.KISDZStammdaten.Fahrplan.TL);
     let result: Tagesleistung[] = [];
-    tagesleistungen.forEach((tagesleistung: any) => {
-      let zuege: any[] = [];
-      zuege.push(tagesleistung.Z);
+    for (let tagesleistung of tagesleistungen) {
+      let zuege = this.ensureCollection(tagesleistung.Z);
       let trains: Zug[] = [];
       zuege.forEach((zug: any) => {
         trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], []))
       });
       let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
       result.push(tl);
-    });
+    }
+    return result;
+  }
+
+  protected ensureCollection(items: any): any [] {
+    if (items instanceof Array) {
+      return items;
+    }
+    let result = [];
+    result.push(items);
     return result;
   }
 
