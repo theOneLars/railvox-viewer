@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Betriebspunkt} from "../../model/betriebspunkt";
 import {XMLParser} from "fast-xml-parser";
@@ -6,28 +6,41 @@ import {Tagesleistung} from "../../model/tagesleistung";
 import {Zug} from "../../model/zug";
 import {Passage} from "../../model/passage";
 import {Trigger} from "../../model/trigger";
+import {StreckenAbschnitt} from "../../model/strecken-abschnitt";
+import {FormControl, Validators} from "@angular/forms";
+
 @Component({
   selector: 'app-railvox-parser',
   templateUrl: './railvox-parser.component.html',
   styleUrls: ['./railvox-parser.component.css']
 })
-export class RailvoxParserComponent implements OnInit {
+export class RailvoxParserComponent implements OnInit, OnDestroy {
 
+  zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
+
+  showSpinner: boolean = true;
   title: string = '';
   betriebspunkById = new Map<string, Betriebspunkt>();
-  streckenabschnitte= new Map<string, StreckenAbschnitt>();
+  streckenabschnitte = new Map<string, StreckenAbschnitt>();
   tagesLeistungen: Tagesleistung[] = [];
 
-
+  filteredTagesleistungen: Tagesleistung[] = [];
 
   constructor(private http: HttpClient) {
     this.loadXML();
   }
 
+  ngOnDestroy(): void {
+    this.betriebspunkById = new Map<string, Betriebspunkt>();
+    this.streckenabschnitte = new Map<string, StreckenAbschnitt>();
+    this.tagesLeistungen = [];
+    this.filteredTagesleistungen = [];
+    }
+
   //getting data function
   loadXML(): void {
     /*Read Data*/
-    this.http.get('assets/export.xml',
+    this.http.get('assets/exportRTZ.xml',
       {
         headers: new HttpHeaders()
           .set('Content-Type', 'text/xml')
@@ -38,6 +51,7 @@ export class RailvoxParserComponent implements OnInit {
       })
       .subscribe((data) => {
         this.parseExport(data);
+        this.showSpinner = false;
       });
   }
 
@@ -98,12 +112,10 @@ export class RailvoxParserComponent implements OnInit {
       let betriebspunkt: Betriebspunkt = this.betriebspunkById.get(passage['@_bp_id']);
       if (typeof betriebspunkt === 'undefined') {
         console.error('Could not find Betriebspunkt witd id: ', passage['@_bp_id']);
+        betriebspunkt = new Betriebspunkt('Not existing Betriebspunkt', "NONE")
       }
       // @ts-ignore
       let streckenabschnitt: StreckenAbschnitt = this.streckenabschnitte.get(passage['@_s_id']);
-      if (typeof streckenabschnitt === 'undefined') {
-        console.error('Could not find Streckenabschnitt witd id: ', passage['@_s_id']);
-      }
       let trigger = this.mapTrigger(passage);
       result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz'], streckenabschnitt));
     });
@@ -114,7 +126,12 @@ export class RailvoxParserComponent implements OnInit {
     let triggers = this.ensureCollection(passageJSON.T);
     let result: Trigger[] = [];
     triggers.forEach((trigger: any) => {
-      result.push(new Trigger(trigger['@_kc'], trigger.TP['@_na'],trigger.TP['@_we']));
+
+      if (trigger && trigger.TP) {
+        result.push(new Trigger(trigger['@_kc'], trigger.TP['@_na'], trigger.TP['@_we']));
+      } else if (trigger) {
+        result.push(new Trigger(trigger['@_kc'], 'no name', 'no value'));
+      }
     })
     return result;
   }
@@ -131,6 +148,11 @@ export class RailvoxParserComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  filterTagesleistungen() {
+    if (this.zugnummerFilter.valid) {
+      let zugnummer: string = this.zugnummerFilter.value || '';
+      this.filteredTagesleistungen = this.tagesLeistungen.filter(tl => tl.hasTrainWithNumber(zugnummer));
+    }
+  }
 }
 
-import {StreckenAbschnitt} from "../../model/strecken-abschnitt";

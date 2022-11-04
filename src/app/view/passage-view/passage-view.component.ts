@@ -16,8 +16,14 @@ export class PassageViewComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  formatAbfahrt(): string {
-    return this.passage.abfahrt.substring(0, 5);
+  formatTime(): string {
+    if (this.passage.abfahrt && this.passage.abfahrt.length >= 6) {
+      return this.passage.abfahrt.substring(0, 5);
+    }
+    if (this.passage.ankunft && this.passage.ankunft.length >= 6) {
+      return this.passage.ankunft.substring(0, 5);
+    }
+    return '';
   }
 
 }

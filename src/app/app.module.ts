@@ -11,6 +11,11 @@ import { TagesleistungViewComponent } from './view/tagesleistung-view/tagesleist
 import { ZugViewComponent } from './view/zug-view/zug-view.component';
 import { PassageViewComponent } from './view/passage-view/passage-view.component';
 import { TriggerViewComponent } from './view/trigger-view/trigger-view.component';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -26,9 +31,14 @@ import { TriggerViewComponent } from './view/trigger-view/trigger-view.component
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MatCardModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatProgressSpinnerModule
   ],
-  providers: [HttpClient],
+  providers: [HttpClient, {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
