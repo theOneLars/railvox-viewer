@@ -1,11 +1,9 @@
 <div *ngIf="zug">
   <mat-card>
-    <mat-card-title>Zug {{zug.zugnummer}}</mat-card-title>
+    <span class="mat-h3"><mat-icon color="primary">directions_railway</mat-icon>Zug {{zug.zugnummer}}</span>
     <mat-card-content>
-      <p>DK-Attribut: {{zug.dk}}</p>
-      <p>Verkehrsperiode: {{zug.vpId}}</p>
-      <div>
-      </div>
+      <div class="mat-body">DK-Attribut: {{zug.dk}}</div>
+      <div class="mat-body">Verkehrsperiode: {{zug.vpId}}</div>
       <app-passage-view *ngFor="let passage of zug.passagen"
       [passage]="passage"
       ></app-passage-view>

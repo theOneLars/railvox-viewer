@@ -1,22 +1,21 @@
-<p class="mat-card-subtitle">Meldung: {{meldung.name}} - {{meldung.outputMediumCode}} ({{meldung.outputMediumId}})
-  <span *ngIf="meldung.sprache">({{meldung.sprache.beschreibung}})</span>
-</p>
+<span class="mat-body move-right">{{meldung.name}} - {{meldung.outputMediumCode}} ({{meldung.outputMediumId}})
+    <span class="mat-body" *ngIf="meldung.sprache">({{meldung.sprache.beschreibung}})</span>
+  </span>
 
-<p class="mat-card-subtitle">Meldungsvarianten:</p>
-<mat-list>
-  <mat-list-item *ngFor="let variante of meldung.meldungVarianten">
-    <span *ngIf="isTextMeldungVariante(variante)">
-      <mat-icon>nest_display</mat-icon>
-       {{variante.text}}
-    </span>
-    <span *ngIf="isBildMeldungVariante(variante)">
-      <mat-icon>image</mat-icon>
+<ol>
+  <li *ngFor="let variante of meldung.meldungVarianten">
+      <span class="mat-body" *ngIf="isTextMeldungVariante(variante)">
+        <mat-icon [matTooltip]="'Textmeldung'" color="primary">monitor</mat-icon>
+        {{variante.text}}
+      </span>
+    <span class="mat-body" *ngIf="isBildMeldungVariante(variante)">
+        <mat-icon [matTooltip]="'Bildmeldung'" color="primary">image</mat-icon>
       {{variante.filename}} - {{variante.format}}
-    </span>
-    <span *ngIf="isAudioMeldungVariante(variante)">
-      <mat-icon>chat_bubble</mat-icon>
+      </span>
+    <span class="mat-body" *ngIf="isAudioMeldungVariante(variante)">
+        <mat-icon [matTooltip]="'Audiomeldung'" color="primary">chat_bubble</mat-icon>
       {{variante.filename}} - {{variante.format}}
-      <span *ngIf="variante.sprache">({{variante.sprache.beschreibung}})</span>
-    </span>
-  </mat-list-item>
-</mat-list>
+      <span class="mat-body" *ngIf="variante.sprache">({{variante.sprache.beschreibung}})</span>
+      </span>
+  </li>
+</ol>

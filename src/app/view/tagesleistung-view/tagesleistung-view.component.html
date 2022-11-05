@@ -1,6 +1,6 @@
 <div *ngIf="tagesleistung">
   <mat-card>
-    <mat-card-title>Tagesleistung ({{tagesleistung.nummer}})</mat-card-title>
+    <span class="mat-h2">Tagesleistung ({{tagesleistung.nummer}})</span>
     <mat-card-content>
       <zug-view *ngFor="let train of tagesleistung.zuege" [zug]="train"></zug-view>
     </mat-card-content>

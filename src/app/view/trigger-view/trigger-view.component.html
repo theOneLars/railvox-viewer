@@ -1,12 +1,11 @@
 <mat-card>
+  <span class="mat-body-strong">
+    <mat-icon color="primary" [matTooltip]="'Trigger'">bolt</mat-icon>
+    {{trigger.typeAsString()}} - {{trigger.name}}: {{trigger.value}}
+    <span *ngIf="trigger.isZeitstation() || trigger.isZeitevent()">s</span>
+    <span *ngIf="trigger.isDistanz()">m</span>
+  </span>
   <mat-card-content class="mat-card-content">
-    <p class="mat-card-subtitle">
-      <span>Trigger: {{trigger.typ}} - {{trigger.name}}: {{trigger.value}}</span>
-      <span *ngIf="trigger.typ === 'zeitstation'">s</span>
-      <span *ngIf="trigger.typ === 'distanz'">m</span>
-    </p>
-    <p *ngFor="let meldung of trigger.meldungen">
-      <meldung-view [meldung]="meldung"></meldung-view>
-    </p>
+      <meldung-view *ngFor="let meldung of trigger.meldungen" [meldung]="meldung"></meldung-view>
   </mat-card-content>
 </mat-card>

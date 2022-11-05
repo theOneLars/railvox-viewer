@@ -1,20 +1,23 @@
+<span class="mat-title" *ngIf="data">{{this.data.title}}</span>
 <mat-spinner *ngIf="showSpinner">Processing xml..</mat-spinner>
 <mat-tab-group *ngIf="!showSpinner" mat-align-tabs="start">
   <mat-tab label="Züge">
 
     <mat-form-field appearance="fill">
       <mat-label>Zugnummer</mat-label>
-      <input matInput placeholder="pat@example.com" [formControl]="zugnummerFilter" required (keyup)="filterTagesleistungen()">
+      <input matInput placeholder="3215" required
+             [formControl]="zugnummerFilter"
+             (keyup)="filterTagesleistungen()">
     </mat-form-field>
 
     <mat-card>
-      <mat-card-title>{{this.data.title}}</mat-card-title>
-      <div *ngFor="let item of filteredTagesleistungen">
-        <tagesleistung-view
-          [tagesleistung]="item"
-        ></tagesleistung-view>
-      </div>
-
+      <mat-card-content>
+        <div *ngFor="let item of filteredTagesleistungen">
+          <tagesleistung-view
+            [tagesleistung]="item"
+          ></tagesleistung-view>
+        </div>
+      </mat-card-content>
     </mat-card>
 
   </mat-tab>

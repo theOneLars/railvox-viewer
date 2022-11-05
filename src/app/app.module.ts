@@ -19,6 +19,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { MeldungViewComponent } from './view/meldung-view/meldung-view.component';
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatProgressSpinnerModule,
     MatListModule,
     MatIconModule,
+    MatToolbarModule,
+    MatTooltipModule,
   ],
   providers: [HttpClient, {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]

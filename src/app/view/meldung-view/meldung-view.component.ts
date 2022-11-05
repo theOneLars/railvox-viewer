@@ -20,14 +20,14 @@ export class MeldungViewComponent implements OnInit {
   }
 
   isTextMeldungVariante(variante: MeldungVariante) {
-    return typeof variante !== 'undefined' && variante.type === VariantenType.TextMeldung;
+    return typeof variante !== 'undefined' && variante.isTextMeldungVariante();
   }
 
   isBildMeldungVariante(variante: MeldungVariante) {
-    return typeof variante !== 'undefined' && variante.type === VariantenType.BildMeldung;
+    return typeof variante !== 'undefined' && variante.isBildMeldungVariante();
   }
 
   isAudioMeldungVariante(variante: MeldungVariante) {
-    return typeof variante !== 'undefined' && variante.type === VariantenType.AudioMeldung;
+    return typeof variante !== 'undefined' && variante.isAudioMeldungVariante();
   }
 }
