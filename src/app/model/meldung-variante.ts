@@ -17,6 +17,18 @@ export class MeldungVariante {
       this.sprache = sprache;
     }
   }
+
+  isTextMeldungVariante(): boolean {
+    return this.type === VariantenType.TextMeldung;
+  }
+
+  isBildMeldungVariante(): boolean {
+    return this.type === VariantenType.BildMeldung;
+  }
+
+  isAudioMeldungVariante(): boolean {
+    return this.type === VariantenType.AudioMeldung;
+  }
 }
 
 export enum VariantenType {
