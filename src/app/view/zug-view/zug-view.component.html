@@ -1,14 +1,21 @@
 <div *ngIf="zug">
-  <mat-card>
-    <span class="mat-h3">
-      <mat-icon [matTooltip]="'Zug mit Nummer'">directions_railway</mat-icon>
-      {{zug.zugnummer}}</span>
-    <mat-card-content>
-      <div class="mat-body">DK-Attribut: {{zug.dk}}</div>
-      <div class="mat-body">Verkehrsperiode: {{zug.vpId}}</div>
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="mat-h3">
+          <mat-icon [matTooltip]="'Zug mit Nummer'">directions_railway</mat-icon>
+          {{zug.zugnummer}}
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
+      <ul>
+        <li class="mat-body">DK-Attribut: {{zug.dk}}</li>
+        <li class="mat-body">Verkehrsperiode: {{zug.vpId}}</li>
+      </ul>
       <app-passage-view *ngFor="let passage of zug.passagen"
-      [passage]="passage"
+                        [passage]="passage"
       ></app-passage-view>
-    </mat-card-content>
-  </mat-card>
+    </ng-template>
+  </mat-expansion-panel>
 </div>

@@ -1,7 +1,16 @@
-<mat-card>
-  <span class="mat-h4"><mat-icon color="primary">pin_drop</mat-icon>{{this.formatTime()}} {{passage.betriebspunk.name}}</span>
-  <mat-card-content>
-    <span class="mat-card-subtitle" *ngIf="passage.streckenabschnitt">Distanz zur nächsten Station: {{passage.streckenabschnitt.distanzToNextStation}}m</span>
-    <trigger-view *ngFor="let item of passage.trigger" [trigger]="item"></trigger-view>
-  </mat-card-content>
-</mat-card>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <span class="mat-h4">
+        <mat-icon color="primary">pin_drop</mat-icon>
+        {{this.formatTime()}} {{passage.betriebspunk.name}}
+      </span>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template matExpansionPanelContent>
+    <span class="mat-card-subtitle"
+          *ngIf="passage.streckenabschnitt">
+      Distanz zur nächsten Station: {{passage.streckenabschnitt.distanzToNextStation}} m</span>
+      <trigger-view *ngFor="let item of passage.trigger" [trigger]="item"></trigger-view>
+  </ng-template>
+</mat-expansion-panel>

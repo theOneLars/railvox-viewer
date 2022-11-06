@@ -22,6 +22,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {FileDropComponent} from './component/file-drop/file-drop.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {FileDropComponent} from './component/file-drop/file-drop.component';
     MatIconModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatExpansionModule,
   ],
   providers: [HttpClient, {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]
