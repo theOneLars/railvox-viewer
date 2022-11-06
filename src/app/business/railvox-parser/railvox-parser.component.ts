@@ -25,8 +25,9 @@ export class RailvoxParserComponent implements OnDestroy {
     // this.loadXML();
     this.fileUploadService.getEvent()
       .subscribe((event: InputFile) => {
+        this.showSpinner = true;
         this.data = new XmlParser().parseExport(event.content);
-        // this.showSpinner = false;
+        this.showSpinner = false;
       });
   }
 
@@ -35,6 +36,7 @@ export class RailvoxParserComponent implements OnDestroy {
   }
 
   loadXML(): void {
+    this.showSpinner = true;
     this.http.get('assets/exportRTZ.xml',
       {
         headers: new HttpHeaders()
