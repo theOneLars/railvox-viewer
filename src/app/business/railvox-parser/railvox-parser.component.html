@@ -7,7 +7,7 @@
       <mat-label>Zugnummer</mat-label>
       <input matInput placeholder="3215" required
              [formControl]="zugnummerFilter"
-             (keyup)="filterTagesleistungen()">
+             (change)="filterTagesleistungen()">
     </mat-form-field>
 
     <mat-card>
