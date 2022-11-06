@@ -10,6 +10,7 @@ import {Zug} from "../model/zug";
 import {Passage} from "../model/passage";
 import {Trigger} from "../model/trigger";
 import {TimetableData} from "./timetable-data";
+import {Traktion} from "../model/traktion";
 
 export class XmlParser {
 
@@ -26,7 +27,7 @@ export class XmlParser {
       ...this.mapBildMeldungVarianten(parsedXML)]);
     this.data.meldungenById = this.mapMeldungen(parsedXML);
     this.data.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
-    this.data.streckenabschnitte = this.mapStreckenabschnitte(parsedXML);
+    this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML);
 
     return this.data;
   }
@@ -58,19 +59,19 @@ export class XmlParser {
       let varianten: MeldungVariante[] = [];
       this.ensureCollection(meldung.AMV)
         .filter(XmlParser.notUndefined())
-        .forEach((amv: any) => varianten.push(<MeldungVariante> this.data.meldungVarianteById.get(amv['@_v_id'])))
+        .forEach((amv: any) => varianten.push(<MeldungVariante>this.data.meldungVarianteById.get(amv['@_v_id'])))
       this.ensureCollection(meldung.BMV)
         .filter(XmlParser.notUndefined())
-        .forEach((bmv: any) => varianten.push(<MeldungVariante> this.data.meldungVarianteById.get(bmv['@_v_id'])))
+        .forEach((bmv: any) => varianten.push(<MeldungVariante>this.data.meldungVarianteById.get(bmv['@_v_id'])))
       this.ensureCollection(meldung.TMV)
         .filter(XmlParser.notUndefined())
-        .forEach((bmv: any) => varianten.push(<MeldungVariante> this.data.meldungVarianteById.get(bmv['@_v_id'])))
+        .forEach((bmv: any) => varianten.push(<MeldungVariante>this.data.meldungVarianteById.get(bmv['@_v_id'])))
       // todo: add functionality for playlists
       let playlistMeldungen = this.ensureCollection(meldung.PMV);
       if (playlistMeldungen.length > 0) {
         new Error('Not yet implemented');
       }
-      let sprache: Sprache = <Sprache> this.data.spracheById.get(meldung['@_sp_id']);
+      let sprache: Sprache = <Sprache>this.data.spracheById.get(meldung['@_sp_id']);
       result.set(meldung['@_id'],
         new Meldung(varianten, meldung['@_name'], meldung['@_am_kc'], meldung['@_am_id'], sprache))
     })
@@ -101,14 +102,35 @@ export class XmlParser {
   public mapTagesLeistungen(parsedXML: any): Tagesleistung[] {
     let tagesleistungen = this.ensureCollection(parsedXML.KISDZStammdaten.Fahrplan.TL);
     let result: Tagesleistung[] = [];
+    let zugNummerById = new Map<string, string>();
     for (let tagesleistung of tagesleistungen) {
       let zuege = this.ensureCollection(tagesleistung.Z);
       let trains: Zug[] = [];
       zuege.forEach((zug: any) => {
-        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], this.mapPassages(zug)))
+        zugNummerById.set(zug['@_id'], zug['@_zn']);
+        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], this.mapPassages(zug), this.mapTraktionen(zug)));
       });
       let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
       result.push(tl);
+    }
+    result.flatMap(tl => tl.zuege)
+      .flatMap(zug => zug.tractions)
+      .forEach(traktion => {
+
+        traktion.zugNummer = <string>zugNummerById.get(traktion.id);
+      });
+    return result;
+  }
+
+  public mapTraktionen(zug: any): Traktion[] {
+    let result: Traktion[] = [];
+    let passage = zug.P[0];
+    if (passage) {
+    this.ensureCollection(passage.TR)
+        .filter((tr: any) => tr['@_z_id'] !== '-1')
+        .forEach((tr: any) => {
+        result.push(new Traktion(tr['@_z_id']));
+      });
     }
     return result;
   }
@@ -153,9 +175,9 @@ export class XmlParser {
           betriebspunkt = new Betriebspunkt('Not existing Betriebspunkt', "NONE")
         }
         // @ts-ignore
-        let streckenabschnitt: StreckenAbschnitt = this.data.streckenabschnitte.get(passage['@_s_id']);
+        let streckenabschnitt: StreckenAbschnitt = this.data.streckenabschnitteById.get(passage['@_s_id']);
         let trigger = this.mapTrigger(passage);
-        result.push(new Passage(betriebspunkt, trigger, [], passage['@_nz'], passage['@_bz'], streckenabschnitt));
+        result.push(new Passage(betriebspunkt, trigger, passage['@_nz'], passage['@_bz'], streckenabschnitt));
       }
     });
     return result
@@ -165,7 +187,7 @@ export class XmlParser {
     let triggers = this.ensureCollection(passageJSON.T);
     let result: Trigger[] = [];
     triggers.forEach((trigger: any) => {
-      let meldungen = this.ensureCollection(trigger.MR).map((mr: any) => <Meldung> this.data.meldungenById.get(mr['@_m_id']));
+      let meldungen = this.ensureCollection(trigger.MR).map((mr: any) => <Meldung>this.data.meldungenById.get(mr['@_m_id']));
       if (trigger && trigger.TP) {
         result.push(new Trigger(trigger['@_kc'], trigger.TP['@_na'], trigger.TP['@_we'], meldungen));
       } else if (trigger) {

@@ -1,8 +1,8 @@
 <div class="dropzone">
   <input type="file" #fileDropRef id="fileDropRef" (change)="fileBrowserHandler($event.target)"/>
   <mat-icon>file_upload</mat-icon>
-  <div class="mat-title">Drag and drop file here</div>
-  <div class="mat-title">or</div>
-  <label for="fileDropRef">Select file</label>
+  <div>
+    <label class="mat-title" for="fileDropRef">Drag and drop file here or select file</label>
+  </div>
 </div>
 

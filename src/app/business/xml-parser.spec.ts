@@ -7,6 +7,8 @@ import {Sprache} from "../model/sprache";
 import {XmlParser} from "./xml-parser";
 import {SprachProvider} from "./test-provider/sprach-provider";
 import {Meldung} from "../model/meldung";
+import {Traktion} from "../model/traktion";
+import {Passage} from "../model/passage";
 
 describe('XmlParser', () => {
 
@@ -58,8 +60,7 @@ describe('XmlParser', () => {
       '      <Z id="204" zn="1009" dk="DAV-LQ-CH" vp_id="4085"></Z>' +
       '    </TL>' +
       '    <TL nr="4085">' +
-      '      <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4085">' +
-      '      </Z>' +
+      '      <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4085"></Z>' +
       '    </TL> ' +
       '  </Fahrplan>' +
       '</KISDZStammdaten>';
@@ -70,11 +71,59 @@ describe('XmlParser', () => {
     expect(actual).toHaveSize(2);
     let expectedTl0 = new Tagesleistung(
       [
-        new Zug('DAV-LQ', '203', '4085', '1008', []),
-        new Zug('DAV-LQ-CH', '204', '4085', '1009', [])
+        new Zug('DAV-LQ', '203', '4085', '1008', [], []),
+        new Zug('DAV-LQ-CH', '204', '4085', '1009', [], [])
       ], '4084');
     let expectedTl1 = new Tagesleistung([
-      new Zug('DAV-LQ', '203', '4085', '1008', [])], '4085');
+      new Zug('DAV-LQ', '203', '4085', '1008', [], [])], '4085');
+    expect(actual[0]).toEqual(expectedTl0);
+    expect(actual[1]).toEqual(expectedTl1);
+  });
+
+  it('should parse traktionen', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <Fahrplan>' +
+      '     <TL nr="4084">' +
+      '      <Z id="203" zn="1203" dk="DAV-LQ" vp_id="4085">' +
+      '       <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '         <TR z_id="204"/>' +
+      '       </P>' +
+      '       <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '         <TR z_id="204"/>' +
+      '       </P>' +
+      '      </Z>' +
+      '    </TL>' +
+      '    <TL nr="4085">' +
+      '      <Z id="204" zn="1204" dk="DAV-CH" vp_id="4085">' +
+      '        <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '          <TR z_id="203"/>' +
+      '        </P>' +
+      '        <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '          <TR z_id="203"/>' +
+      '        </P>' +
+      '        </Z>' +
+      '    </TL> ' +
+      '  </Fahrplan>' +
+      '</KISDZStammdaten>';
+
+    let testee = new XmlParser();
+    let parsedXml = testee.parseXml(xml);
+
+    let streckenabschnitt = new StreckenAbschnitt('1234');
+    testee.data.streckenabschnitteById.set('4993', streckenabschnitt);
+    let betriebspunkt = new Betriebspunkt('Davos Dorf', 'DAD');
+    testee.data.betriebspunkById.set('4087', betriebspunkt);
+    let passage = new Passage(betriebspunkt, [], '12:08:00.000', '12:09:00.000', streckenabschnitt);
+
+    let actual: Tagesleistung[] = testee.mapTagesLeistungen(parsedXml);
+    expect(actual).toHaveSize(2);
+    let expectedTl0 = new Tagesleistung(
+      [new Zug('DAV-LQ', '203', '4085', '1203', [passage, passage],[new Traktion('204', '1204')])]
+      , '4084');
+    let expectedTl1 = new Tagesleistung(
+      [new Zug('DAV-CH', '204', '4085', '1204', [passage, passage], [new Traktion('203', '1203')])]
+      , '4085');
     expect(actual[0]).toEqual(expectedTl0);
     expect(actual[1]).toEqual(expectedTl1);
   });
