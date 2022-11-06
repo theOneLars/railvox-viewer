@@ -1,5 +1,5 @@
 <mat-card>
-  <span class="mat-h4">{{this.formatTime()}} {{passage.betriebspunk.name}}</span>
+  <span class="mat-h4"><mat-icon color="primary">pin_drop</mat-icon>{{this.formatTime()}} {{passage.betriebspunk.name}}</span>
   <mat-card-content>
     <span class="mat-card-subtitle" *ngIf="passage.streckenabschnitt">Distanz zur nächsten Station: {{passage.streckenabschnitt.distanzToNextStation}}m</span>
     <trigger-view *ngFor="let item of passage.trigger" [trigger]="item"></trigger-view>
