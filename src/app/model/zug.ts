@@ -1,5 +1,6 @@
 import {Passage} from "./passage";
 import {Traktion} from "./traktion";
+import {Verkehrsperiode} from "./verkehrsperiode";
 
 export class Zug {
 
@@ -9,14 +10,16 @@ export class Zug {
   zugnummer: string;
   passagen: Passage[];
   tractions: Traktion[];
+  verkehrsperiode: Verkehrsperiode;
 
-  constructor(dk: string, id: string, vpId: string, zugnummer: string, passagen: Passage[], tractions: Traktion[]) {
+  constructor(dk: string, id: string, vpId: string, zugnummer: string, passagen: Passage[], tractions: Traktion[], verkehrsperiode: Verkehrsperiode) {
     this.dk = dk;
     this.id = id;
     this.vpId = vpId;
     this.zugnummer = zugnummer;
     this.passagen = passagen;
     this.tractions = tractions;
+    this.verkehrsperiode = verkehrsperiode;
   }
 
   public hasTractions(): boolean {

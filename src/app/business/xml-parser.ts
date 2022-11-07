@@ -11,6 +11,8 @@ import {Passage} from "../model/passage";
 import {Trigger} from "../model/trigger";
 import {TimetableData} from "./timetable-data";
 import {Traktion} from "../model/traktion";
+import {Verkehrsperiode} from "../model/verkehrsperiode";
+const moment = require('moment');
 
 export class XmlParser {
 
@@ -18,9 +20,9 @@ export class XmlParser {
 
   public parseExport(xml: string): TimetableData {
     let parsedXML = this.parseXml(xml);
-    this.data.title = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem']
     this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);
     this.data.spracheById = this.mapSprachen(parsedXML);
+    this.data.verkehrsperiodeById = this.mapVerkehrsperioden(parsedXML);
     this.data.meldungVarianteById = new Map([
       ...this.mapAudioMeldungVarianten(parsedXML),
       ...this.mapTextMeldungVarianten(parsedXML),
@@ -28,8 +30,18 @@ export class XmlParser {
     this.data.meldungenById = this.mapMeldungen(parsedXML);
     this.data.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
     this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML);
-
+    this.data.title = this.mapTitle(parsedXML);
     return this.data;
+  }
+
+  private mapTitle(parsedXML: any): string {
+    // let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode> this.data.verkehrsperiodeById.get([... this.data.verkehrsperiodeById.keys()][0]);
+    // console.log(verkehrsperiode);
+    // let fromDate = moment(verkehrsperiode.fromDate);
+    // let toDate = moment(verkehrsperiode.toDate);
+    let result =  parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem'];
+    // result += ' (' + fromDate + ' - ' + toDate + ')';
+    return result;
   }
 
   public parseXml(data: string) {
@@ -42,13 +54,23 @@ export class XmlParser {
     return fastXmlParser.parse(data, {});
   }
 
+  public mapVerkehrsperioden(parsedXML: any): Map<string, Verkehrsperiode> {
+    let result = new Map<string, Verkehrsperiode>();
+    let validFrom = parsedXML.KISDZStammdaten.Fahrplan['@_gueltig_ab'];
+    let validTo = parsedXML.KISDZStammdaten.Fahrplan['@_gueltig_bis'];
+    let verkehrspersiden = this.ensureCollection(parsedXML.KISDZStammdaten.Fahrplan.VerkehrsperiodeListe.VP);
+    verkehrspersiden.forEach(vp => {
+      result.set(vp['@_id'], new Verkehrsperiode(vp['@_id'], vp['@_co'], validFrom, validTo, vp['@_fm']));
+    })
+    return result;
+  }
+
   public mapSprachen(parsedXML: any): Map<string, Sprache> {
     let sprachen: any = this.ensureCollection(parsedXML.KISDZStammdaten.SprachenListe.Sprache);
     let result = new Map<string, Sprache>();
     sprachen.forEach((sprache: any) => {
       result.set(sprache['@_id'], new Sprache(sprache['@_co'], sprache['@_be']));
     })
-
     return result;
   }
 
@@ -108,7 +130,8 @@ export class XmlParser {
       let trains: Zug[] = [];
       zuege.forEach((zug: any) => {
         zugNummerById.set(zug['@_id'], zug['@_zn']);
-        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'], this.mapPassages(zug), this.mapTraktionen(zug)));
+        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'],
+          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode> this.data.verkehrsperiodeById.get(zug['@_vp_id'])));
       });
       let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
       result.push(tl);
@@ -124,13 +147,15 @@ export class XmlParser {
 
   public mapTraktionen(zug: any): Traktion[] {
     let result: Traktion[] = [];
-    let passage = zug.P[0];
-    if (passage) {
-    this.ensureCollection(passage.TR)
-        .filter((tr: any) => tr['@_z_id'] !== '-1')
-        .forEach((tr: any) => {
-        result.push(new Traktion(tr['@_z_id']));
-      });
+    if (this.ensureCollection(zug.P).length > 1) {
+      let passage = zug.P[0];
+      if (passage) {
+        this.ensureCollection(passage.TR)
+          .filter((tr: any) => tr['@_z_id'] !== '-1')
+          .forEach((tr: any) => {
+            result.push(new Traktion(tr['@_z_id']));
+          });
+      }
     }
     return result;
   }

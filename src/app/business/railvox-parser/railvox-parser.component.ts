@@ -17,6 +17,7 @@ export class RailvoxParserComponent implements OnDestroy {
   showSpinner: boolean = false;
 
   zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
+  tag = new FormControl<Date | null>(null, [Validators.required]);
   filteredTagesleistungen: Tagesleistung[] = [];
 
   data: TimetableData;
@@ -56,7 +57,10 @@ export class RailvoxParserComponent implements OnDestroy {
   filterTagesleistungen() {
     if (this.zugnummerFilter.valid) {
       let zugnummer: string = this.zugnummerFilter.value || '';
-      this.filteredTagesleistungen = this.data.tagesLeistungen.filter(tl => tl.hasTrainWithNumber(zugnummer));
+      let day: Date = <Date> this.tag.value;
+      this.filteredTagesleistungen = this.data.tagesLeistungen
+        .filter(tl => tl.hasTrainWithNumber(zugnummer))
+        .filter(tl => tl.hasTrainValidForDay(day));
     }
   }
 }

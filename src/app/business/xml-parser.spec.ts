@@ -9,6 +9,8 @@ import {SprachProvider} from "./test-provider/sprach-provider";
 import {Meldung} from "../model/meldung";
 import {Traktion} from "../model/traktion";
 import {Passage} from "../model/passage";
+import {Verkehrsperiode} from "../model/verkehrsperiode";
+import {VerkehrsperiodenProvider} from "./test-provider/verkehrsperioden-provider";
 
 describe('XmlParser', () => {
 
@@ -66,16 +68,18 @@ describe('XmlParser', () => {
       '</KISDZStammdaten>';
     let testee = new XmlParser();
     let parsedXml = testee.parseXml(xml);
+    let verkehrsperiode = VerkehrsperiodenProvider.provide_17();
+    testee.data.verkehrsperiodeById.set('4085', verkehrsperiode);
     let actual: Tagesleistung[] = testee.mapTagesLeistungen(parsedXml);
 
     expect(actual).toHaveSize(2);
     let expectedTl0 = new Tagesleistung(
       [
-        new Zug('DAV-LQ', '203', '4085', '1008', [], []),
-        new Zug('DAV-LQ-CH', '204', '4085', '1009', [], [])
+        new Zug('DAV-LQ', '203', '4085', '1008', [], [], verkehrsperiode),
+        new Zug('DAV-LQ-CH', '204', '4085', '1009', [], [], verkehrsperiode)
       ], '4084');
     let expectedTl1 = new Tagesleistung([
-      new Zug('DAV-LQ', '203', '4085', '1008', [], [])], '4085');
+      new Zug('DAV-LQ', '203', '4085', '1008', [], [], verkehrsperiode)], '4085');
     expect(actual[0]).toEqual(expectedTl0);
     expect(actual[1]).toEqual(expectedTl1);
   });
@@ -115,14 +119,16 @@ describe('XmlParser', () => {
     let betriebspunkt = new Betriebspunkt('Davos Dorf', 'DAD');
     testee.data.betriebspunkById.set('4087', betriebspunkt);
     let passage = new Passage(betriebspunkt, [], '12:08:00.000', '12:09:00.000', streckenabschnitt);
+    let verkehrsperiode = VerkehrsperiodenProvider.provide_17();
+    testee.data.verkehrsperiodeById.set('4085', verkehrsperiode);
 
     let actual: Tagesleistung[] = testee.mapTagesLeistungen(parsedXml);
     expect(actual).toHaveSize(2);
     let expectedTl0 = new Tagesleistung(
-      [new Zug('DAV-LQ', '203', '4085', '1203', [passage, passage],[new Traktion('204', '1204')])]
+      [new Zug('DAV-LQ', '203', '4085', '1203', [passage, passage],[new Traktion('204', '1204')], verkehrsperiode)]
       , '4084');
     let expectedTl1 = new Tagesleistung(
-      [new Zug('DAV-CH', '204', '4085', '1204', [passage, passage], [new Traktion('203', '1203')])]
+      [new Zug('DAV-CH', '204', '4085', '1204', [passage, passage], [new Traktion('203', '1203')], verkehrsperiode)]
       , '4085');
     expect(actual[0]).toEqual(expectedTl0);
     expect(actual[1]).toEqual(expectedTl1);
@@ -325,4 +331,23 @@ describe('XmlParser', () => {
       new Meldung([meldungVariante3], 'Landquart', 'anz.Front.K1Zugtyp1', '10'));
   });
 
+  it('should parse list of verkehrsperioden', () => {
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <Fahrplan gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">' +
+      '        <VerkehrsperiodeListe>   ' +
+      '           <VP id="1" co="22*" fm="0000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000"/>\n' +
+      '           <VP id="2" co="generated" fm="0000000000000000000000000000000000000000000000000000000000000000000000020408102040810204081"/>' +
+      '        </VerkehrsperiodeListe>   ' +
+      '   </Fahrplan>' +
+      '</KISDZStammdaten>';
+    let testee = new XmlParser();
+    let parsedXml = testee.parseXml(xml);
+
+    let actual = testee.mapVerkehrsperioden(parsedXml);
+
+    expect(actual).toHaveSize(2);
+    expect(actual.get('1')).toEqual(new Verkehrsperiode('1', '22*', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000'));
+    expect(actual.get('2')).toEqual(new Verkehrsperiode('2', 'generated', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000020408102040810204081'));
+  });
 });

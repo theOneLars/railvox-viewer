@@ -19,4 +19,14 @@ export class Tagesleistung {
       .filter(zugnummer => zugnummer.includes(zugnummerFilter))
       .length > 0;
   }
+
+  hasTrainValidForDay(date: Date) {
+    if (!date) {
+      return false;
+    }
+    return this.zuege
+      .map(zug => zug.verkehrsperiode)
+      .filter(verkehrsperiode => verkehrsperiode.isValidOnDay(date))
+      .length > 0;
+  }
 }
