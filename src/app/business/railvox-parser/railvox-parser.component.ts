@@ -6,6 +6,7 @@ import {TimetableData} from "../timetable-data";
 import {XmlParser} from "../xml-parser";
 import {FileUploadService} from "../../service/file-upload.service";
 import {InputFile} from "../../model/input-file";
+import {Moment} from "moment";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -17,7 +18,7 @@ export class RailvoxParserComponent implements OnDestroy {
   showSpinner: boolean = false;
 
   zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
-  tag = new FormControl<Date | null>(null, [Validators.required]);
+  tag = new FormControl<Moment | null>(null, [Validators.required]);
   filteredTagesleistungen: Tagesleistung[] = [];
 
   data: TimetableData;
@@ -57,7 +58,7 @@ export class RailvoxParserComponent implements OnDestroy {
   filterTagesleistungen() {
     if (this.zugnummerFilter.valid) {
       let zugnummer: string = this.zugnummerFilter.value || '';
-      let day: Date = <Date> this.tag.value;
+      let day: Moment = <Moment> this.tag.value;
       this.filteredTagesleistungen = this.data.tagesLeistungen
         .filter(tl => tl.hasTrainWithNumber(zugnummer))
         .filter(tl => tl.hasTrainValidForDay(day));

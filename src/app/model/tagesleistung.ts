@@ -1,4 +1,5 @@
 import {Zug} from "./zug";
+import {Moment} from "moment";
 
 export class Tagesleistung {
 
@@ -20,7 +21,7 @@ export class Tagesleistung {
       .length > 0;
   }
 
-  hasTrainValidForDay(date: Date) {
+  hasTrainValidForDay(date: Moment) {
     if (!date) {
       return false;
     }

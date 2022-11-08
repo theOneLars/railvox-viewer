@@ -35,12 +35,9 @@ export class XmlParser {
   }
 
   private mapTitle(parsedXML: any): string {
-    // let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode> this.data.verkehrsperiodeById.get([... this.data.verkehrsperiodeById.keys()][0]);
-    // console.log(verkehrsperiode);
-    // let fromDate = moment(verkehrsperiode.fromDate);
-    // let toDate = moment(verkehrsperiode.toDate);
+    let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode> this.data.verkehrsperiodeById.get([... this.data.verkehrsperiodeById.keys()][0]);
     let result =  parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem'];
-    // result += ' (' + fromDate + ' - ' + toDate + ')';
+    result += ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
     return result;
   }
 

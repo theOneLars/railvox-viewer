@@ -11,6 +11,7 @@ import {Traktion} from "../model/traktion";
 import {Passage} from "../model/passage";
 import {Verkehrsperiode} from "../model/verkehrsperiode";
 import {VerkehrsperiodenProvider} from "./test-provider/verkehrsperioden-provider";
+import * as moment from "moment";
 
 describe('XmlParser', () => {
 
@@ -349,5 +350,11 @@ describe('XmlParser', () => {
     expect(actual).toHaveSize(2);
     expect(actual.get('1')).toEqual(new Verkehrsperiode('1', '22*', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000'));
     expect(actual.get('2')).toEqual(new Verkehrsperiode('2', 'generated', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000020408102040810204081'));
+  });
+
+  it('should work', () => {
+    console.log(moment("25-12-1995", "DD-MM-YYYY").toString());
+    let date = moment("25-12-1995", "DD-MM-YYYY");
+    console.log('fuck you! ' + date.days() + '-' + date.month() + '-' +  date.year());
   });
 });

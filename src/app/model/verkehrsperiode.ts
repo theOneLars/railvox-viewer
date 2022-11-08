@@ -1,11 +1,13 @@
+import {Moment} from "moment";
+
 const moment = require('moment');
 
 export class Verkehrsperiode {
 
   id: string;
   name: string;
-  fromDate: Date;
-  toDate: Date;
+  fromDate: Moment;
+  toDate: Moment;
   bitMaske: string;
 
   constructor(id: string, name: string, fromDate: string, toDate: string, bitMaske: string) {
@@ -16,21 +18,18 @@ export class Verkehrsperiode {
     this.bitMaske = bitMaske;
   }
 
-  public static convertToDate(date: string) {
+  public static convertToDate(date: string): Moment {
     let year = Number(date.substring(0, 4));
     let month = Number(date.substring(5, 7));
     let day = Number(date.substring(8, 10));
-    console.log(year, month, day);
-    return new Date(year, month, day);
+    return moment([year, month -1, day]);
   }
 
   public getNumberOfDays() {
-    let toDate = moment(this.toDate);
-    let fromDate = moment(this.fromDate);
-    return toDate.diff(fromDate, 'days');
+    return this.toDate.diff(this.fromDate, 'days');
   }
 
-  public isValidOnDay(input: Date): boolean {
+  public isValidOnDay(input: Moment): boolean {
     let dateToCheck = moment(input);
     let fromDate = moment(this.fromDate);
     let toDate = moment(this.toDate);
@@ -41,7 +40,6 @@ export class Verkehrsperiode {
 
     let daysFromStart = dateToCheck.diff(fromDate, 'days');
     let bitmask = this.getBinaryBitmask();
-    console.log(bitmask);
     let day = bitmask.substring(daysFromStart, daysFromStart + 1);
 
     return day === '1';
