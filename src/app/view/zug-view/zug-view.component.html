@@ -11,7 +11,7 @@
     <ng-template matExpansionPanelContent>
       <ul>
         <li class="mat-body">DK-Attribut: {{zug.dk}}</li>
-        <li class="mat-body">Verkehrsperiode: {{zug.vpId}}</li>
+        <li class="mat-body">Verkehrsperiode: {{zug.verkehrsperiode.name}} ({{zug.vpId}})</li>
         <li class="mat-body"*ngIf="zug.hasTractions()">Traktionen: {{zug.getTractionsAsString()}}</li>
       </ul>
       <app-passage-view *ngFor="let passage of zug.passagen"

@@ -12,6 +12,7 @@ import {Trigger} from "../model/trigger";
 import {TimetableData} from "./timetable-data";
 import {Traktion} from "../model/traktion";
 import {Verkehrsperiode} from "../model/verkehrsperiode";
+
 const moment = require('moment');
 
 export class XmlParser {
@@ -20,6 +21,7 @@ export class XmlParser {
 
   public parseExport(xml: string): TimetableData {
     let parsedXML = this.parseXml(xml);
+    this.data = new TimetableData();
     this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);
     this.data.spracheById = this.mapSprachen(parsedXML);
     this.data.verkehrsperiodeById = this.mapVerkehrsperioden(parsedXML);

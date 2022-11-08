@@ -17,12 +17,12 @@ export class Tagesleistung {
     }
     return this.zuege
       .map(zug => zug.zugnummer)
-      .filter(zugnummer => zugnummer.includes(zugnummerFilter))
+      .filter(zugnummer => zugnummer === zugnummerFilter)
       .length > 0;
   }
 
   hasTrainValidForDay(date: Moment) {
-    if (!date) {
+    if (!date || !date.isValid()) {
       return false;
     }
     return this.zuege

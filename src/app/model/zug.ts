@@ -28,7 +28,6 @@ export class Zug {
 
   public getTractionsAsString(): string {
     if (this.hasTractions()) {
-      console.log('tractions', this.tractions);
     }
     return this.tractions.map(tr => tr.zugNummer).join(',')
   }

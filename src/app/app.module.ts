@@ -25,6 +25,7 @@ import {FileDropComponent} from './component/file-drop/file-drop.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {MatMomentDateModule} from "@angular/material-moment-adapter";
 
 @NgModule({
   declarations: [
@@ -54,7 +55,7 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatTooltipModule,
     MatExpansionModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    MatMomentDateModule,
   ],
   providers: [HttpClient, {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}],
   bootstrap: [AppComponent]
