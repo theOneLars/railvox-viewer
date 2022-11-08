@@ -19,7 +19,7 @@ export class RailvoxParserComponent implements OnDestroy {
   showSpinner: boolean = false;
 
   zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
-  tagFilter = new FormControl(moment());
+  tagFilter = new FormControl(moment(), [Validators.required]);
   filteredTagesleistungen: Tagesleistung[] = [];
 
   data: TimetableData;
