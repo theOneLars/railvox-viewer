@@ -8,6 +8,7 @@ import {FileUploadService} from "../../service/file-upload.service";
 import {InputFile} from "../../model/input-file";
 import {Moment} from "moment";
 import * as moment from "moment";
+import {MessageService} from "../../service/message.service";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -16,21 +17,18 @@ import * as moment from "moment";
 })
 export class RailvoxParserComponent implements OnDestroy {
 
-  showSpinner: boolean = false;
-
   zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
   tagFilter = new FormControl(moment(), [Validators.required]);
   filteredTagesleistungen: Tagesleistung[] = [];
 
   data: TimetableData;
 
-  constructor(private http: HttpClient, private fileUploadService: FileUploadService) {
+  constructor(private http: HttpClient, private fileUploadService: FileUploadService, private messageService: MessageService) {
     // this.loadXML();
     this.fileUploadService.getEvent()
       .subscribe((event: InputFile) => {
-        this.showSpinner = true;
         this.data = new XmlParser().parseExport(event.content);
-        this.showSpinner = false;
+        this.messageService.sendMessage('Import done');
       });
   }
 
@@ -39,7 +37,6 @@ export class RailvoxParserComponent implements OnDestroy {
   }
 
   loadXML(): void {
-    this.showSpinner = true;
     this.http.get('assets/exportRTZ.xml',
       {
         headers: new HttpHeaders()
@@ -50,9 +47,7 @@ export class RailvoxParserComponent implements OnDestroy {
         responseType: 'text'
       })
       .subscribe((data) => {
-        this.showSpinner = true;
         this.data = new XmlParser().parseExport(data);
-        this.showSpinner = false;
       });
   }
 
