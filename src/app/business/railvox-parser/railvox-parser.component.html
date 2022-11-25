@@ -30,4 +30,9 @@
     </mat-card>
 
   </mat-tab>
+  <mat-tab *ngIf="data" label="Verkehrsperioden">
+    <operating-period-view [timetableData]="data">
+
+    </operating-period-view>
+  </mat-tab>
 </mat-tab-group>

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Zug} from "../../model/zug";
+import {Zug} from "../../../model/zug";
 
 @Component({
   selector: 'zug-view',

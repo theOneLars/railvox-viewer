@@ -9,6 +9,7 @@ export class Verkehrsperiode {
   fromDate: Moment;
   toDate: Moment;
   bitMaske: string;
+  displayName: string;
 
   constructor(id: string, name: string, fromDate: string, toDate: string, bitMaske: string) {
     this.id = id;
@@ -16,6 +17,7 @@ export class Verkehrsperiode {
     this.fromDate = Verkehrsperiode.convertToDate(fromDate);
     this.toDate = Verkehrsperiode.convertToDate(toDate);
     this.bitMaske = bitMaske;
+    this.displayName = name + ' (' + id + ')';
   }
 
   public static convertToDate(date: string): Moment {

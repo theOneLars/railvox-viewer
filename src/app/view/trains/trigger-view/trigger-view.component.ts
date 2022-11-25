@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Trigger} from "../../model/trigger";
+import {Trigger} from "../../../model/trigger";
 
 @Component({
   selector: 'trigger-view',

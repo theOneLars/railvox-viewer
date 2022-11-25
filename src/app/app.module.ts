@@ -7,16 +7,16 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RailvoxParserComponent} from './business/railvox-parser/railvox-parser.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatCardModule} from '@angular/material/card';
-import {TagesleistungViewComponent} from './view/tagesleistung-view/tagesleistung-view.component';
-import {ZugViewComponent} from './view/zug-view/zug-view.component';
-import {PassageViewComponent} from './view/passage-view/passage-view.component';
-import {TriggerViewComponent} from './view/trigger-view/trigger-view.component';
+import {TagesleistungViewComponent} from './view/trains/tagesleistung-view/tagesleistung-view.component';
+import {ZugViewComponent} from './view/trains/zug-view/zug-view.component';
+import {PassageViewComponent} from './view/trains/passage-view/passage-view.component';
+import {TriggerViewComponent} from './view/trains/trigger-view/trigger-view.component';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MeldungViewComponent} from './view/meldung-view/meldung-view.component';
+import {MeldungViewComponent} from './view/trains/meldung-view/meldung-view.component';
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -26,6 +26,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
+import { OperatingPeriodViewComponent } from './view/operating-periods/operating-period-view/operating-period-view.component';
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
     TriggerViewComponent,
     MeldungViewComponent,
     FileDropComponent,
+    OperatingPeriodViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
     MatExpansionModule,
     MatDatepickerModule,
     MatMomentDateModule,
+    MatSelectModule,
   ],
   providers: [
     HttpClient,
