@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "buildForDeployment": "ng build --base-href=/railvox-viewer/",
+    "deployOnGithubPages": "ng deploy --base-href=/railvox-viewer/"
   },
   "private": true,
   "dependencies": {
