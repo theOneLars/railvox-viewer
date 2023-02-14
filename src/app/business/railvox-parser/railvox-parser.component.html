@@ -1,7 +1,6 @@
 <span class="mat-title" *ngIf="data">{{this.data.title}}</span>
-<mat-spinner *ngIf="showSpinner" ></mat-spinner>
-<mat-tab-group *ngIf="!showSpinner" mat-align-tabs="start">
-  <mat-tab *ngIf="data" label="Züge">
+<mat-tab-group *ngIf="data" mat-align-tabs="start">
+  <mat-tab label="Züge">
 
     <mat-form-field appearance="fill">
       <mat-label>Zugnummer</mat-label>

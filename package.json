@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "buildForDeployment": "ng build --base-href=/railvox-viewer/",
+    "deployOnGithubPages": "ng deploy --base-href=/railvox-viewer/"
   },
   "private": true,
   "dependencies": {
@@ -32,7 +34,7 @@
     "@angular/cli": "~14.2.6",
     "@angular/compiler-cli": "^14.2.0",
     "@types/jasmine": "~4.0.0",
-    "angular-cli-ghpages": "^1.0.3",
+    "angular-cli-ghpages": "1.0.5",
     "jasmine-core": "~4.3.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",

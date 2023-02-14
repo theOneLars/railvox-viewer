@@ -6,7 +6,7 @@ import {VerkehrsperiodenProvider} from "../business/test-provider/verkehrsperiod
 describe('MeldungVariante', () => {
 
   it('should filter trainnumber ', () => {
-    let zug = new Zug('dk', '123', '1', '7124', [], [], VerkehrsperiodenProvider.provide_17())
+    let zug = new Zug('dk', '123', '1', '7124', [], [], VerkehrsperiodenProvider.provide_17(), Zug.DEFAULT_NO_FOLGEZUG_ID)
     let testee = new Tagesleistung([zug], '1111');
 
     expect(testee.hasTrainWithNumber('7124')).toBeTrue();

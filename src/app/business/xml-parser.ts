@@ -130,15 +130,22 @@ export class XmlParser {
       zuege.forEach((zug: any) => {
         zugNummerById.set(zug['@_id'], zug['@_zn']);
         trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'],
-          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode> this.data.verkehrsperiodeById.get(zug['@_vp_id'])));
+          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode> this.data.verkehrsperiodeById.get(zug['@_vp_id']), this.mapFolgezugId(zug)));
       });
       let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
       result.push(tl);
     }
+
+    result.flatMap(tl => tl.zuege)
+      .forEach(zug => {
+        if (zug.hasFolgezug()) {
+          zug.folgezugNumber = <string>zugNummerById.get(zug.folgezugId);
+        }
+      })
+
     result.flatMap(tl => tl.zuege)
       .flatMap(zug => zug.tractions)
       .forEach(traktion => {
-
         traktion.zugNummer = <string>zugNummerById.get(traktion.id);
       });
     return result;
@@ -205,6 +212,18 @@ export class XmlParser {
       }
     });
     return result
+  }
+
+  public mapFolgezugId(zugJSON: any): string {
+    // default: -1
+    let folgezugId = Zug.DEFAULT_NO_FOLGEZUG_ID;
+    let passages = this.ensureCollection(zugJSON.P);
+    passages.forEach((passage: any) => {
+      if (passage.F && passage.F['@_z_id']) {
+        folgezugId =  passage.F['@_z_id'];
+      }
+    });
+    return folgezugId;
   }
 
   public mapTrigger(passageJSON: any): Trigger[] {

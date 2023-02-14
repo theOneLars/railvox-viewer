@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from "rxjs";
 import {InputFile} from "../model/input-file";
 
 @Injectable({
@@ -15,7 +15,7 @@ export class FileUploadService {
     return this.subject;
   }
 
-  public emitFile(inutFile: InputFile): void {
-    return this.subject.next(inutFile);
+  public emitFile(inputFile: InputFile): void {
+    return this.subject.next(inputFile);
   }
 }

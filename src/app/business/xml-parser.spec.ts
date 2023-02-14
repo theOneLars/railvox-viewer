@@ -76,11 +76,11 @@ describe('XmlParser', () => {
     expect(actual).toHaveSize(2);
     let expectedTl0 = new Tagesleistung(
       [
-        new Zug('DAV-LQ', '203', '4085', '1008', [], [], verkehrsperiode),
-        new Zug('DAV-LQ-CH', '204', '4085', '1009', [], [], verkehrsperiode)
+        new Zug('DAV-LQ', '203', '4085', '1008', [], [], verkehrsperiode, Zug.DEFAULT_NO_FOLGEZUG_ID),
+        new Zug('DAV-LQ-CH', '204', '4085', '1009', [], [], verkehrsperiode, Zug.DEFAULT_NO_FOLGEZUG_ID)
       ], '4084');
     let expectedTl1 = new Tagesleistung([
-      new Zug('DAV-LQ', '203', '4085', '1008', [], [], verkehrsperiode)], '4085');
+      new Zug('DAV-LQ', '203', '4085', '1008', [], [], verkehrsperiode, Zug.DEFAULT_NO_FOLGEZUG_ID)], '4085');
     expect(actual[0]).toEqual(expectedTl0);
     expect(actual[1]).toEqual(expectedTl1);
   });
@@ -126,13 +126,63 @@ describe('XmlParser', () => {
     let actual: Tagesleistung[] = testee.mapTagesLeistungen(parsedXml);
     expect(actual).toHaveSize(2);
     let expectedTl0 = new Tagesleistung(
-      [new Zug('DAV-LQ', '203', '4085', '1203', [passage, passage],[new Traktion('204', '1204')], verkehrsperiode)]
+      [new Zug('DAV-LQ', '203', '4085', '1203', [passage, passage], [new Traktion('204', '1204')], verkehrsperiode, Zug.DEFAULT_NO_FOLGEZUG_ID)]
       , '4084');
     let expectedTl1 = new Tagesleistung(
-      [new Zug('DAV-CH', '204', '4085', '1204', [passage, passage], [new Traktion('203', '1203')], verkehrsperiode)]
+      [new Zug('DAV-CH', '204', '4085', '1204', [passage, passage], [new Traktion('203', '1203')], verkehrsperiode, Zug.DEFAULT_NO_FOLGEZUG_ID)]
       , '4085');
     expect(actual[0]).toEqual(expectedTl0);
     expect(actual[1]).toEqual(expectedTl1);
+  });
+
+  it('should parse follow train number and id', () => {
+
+    let xml =
+      '<KISDZStammdaten>' +
+      '   <Fahrplan>' +
+      '     <TL nr="4084">' +
+      '      <Z id="203" zn="1203" dk="DAV-LQ" vp_id="4085">' +
+      '       <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '       </P>' +
+      '       <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '          <F z_id="204"/>' +
+      '       </P>' +
+      '      </Z>' +
+      '    </TL>' +
+      '    <TL nr="4085">' +
+      '      <Z id="204" zn="1204" dk="DAV-CH" vp_id="4085">' +
+      '        <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '        </P>' +
+      '        <P bp_id="4087" nz="12:08:00.000" bz="12:09:00.000" ty="1" s_id="4993">' +
+      '          <F z_id="-1"/>' +
+      '        </P>' +
+      '        </Z>' +
+      '    </TL> ' +
+      '  </Fahrplan>' +
+      '</KISDZStammdaten>';
+
+    let testee = new XmlParser();
+    let parsedXml = testee.parseXml(xml);
+
+    let streckenabschnitt = new StreckenAbschnitt('1234');
+    testee.data.streckenabschnitteById.set('4993', streckenabschnitt);
+    let betriebspunkt = new Betriebspunkt('Davos Dorf', 'DAD');
+    testee.data.betriebspunkById.set('4087', betriebspunkt);
+    let passage = new Passage(betriebspunkt, [], '12:08:00.000', '12:09:00.000', streckenabschnitt);
+    let verkehrsperiode = VerkehrsperiodenProvider.provide_17();
+    testee.data.verkehrsperiodeById.set('4085', verkehrsperiode);
+
+    let actual: Tagesleistung[] = testee.mapTagesLeistungen(parsedXml);
+    expect(actual).toHaveSize(2);
+    let zugTl1 = new Zug('DAV-LQ', '203', '4085', '1203', [passage, passage], [], verkehrsperiode, '204');
+    zugTl1.folgezugNumber = '1204';
+    let zugTl2 = new Zug('DAV-CH', '204', '4085', '1204', [passage, passage], [], verkehrsperiode, Zug.DEFAULT_NO_FOLGEZUG_ID);
+    let expectedTl0 = new Tagesleistung([zugTl1], '4084');
+    let expectedTl1 = new Tagesleistung([zugTl2], '4085');
+    expect(actual[0]).toEqual(expectedTl0);
+    expect(actual[0].zuege[0].hasFolgezug()).toBeTrue();
+    expect(actual[1]).toEqual(expectedTl1);
+    expect(actual[1].zuege[0].hasFolgezug()).toBeFalse();
   });
 
   it('should parse list of streckenabschnitte', () => {
@@ -355,6 +405,6 @@ describe('XmlParser', () => {
   it('should work', () => {
     console.log(moment("25-12-1995", "DD-MM-YYYY").toString());
     let date = moment("25-12-1995", "DD-MM-YYYY");
-    console.log('fuck you! ' + date.days() + '-' + date.month() + '-' +  date.year());
+    console.log('fuck you! ' + date.days() + '-' + date.month() + '-' + date.year());
   });
 });
