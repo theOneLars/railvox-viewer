@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TimetableData} from "../../../business/timetable-data";
 import {Verkehrsperiode} from "../../../model/verkehrsperiode";
+import * as moment from "moment";
+import {Moment} from "moment";
 
 @Component({
   selector: 'operating-period-view',
@@ -13,19 +15,13 @@ export class OperatingPeriodViewComponent implements OnInit {
   timetableData: TimetableData;
   operatingPeriods: any = [];
   selected: Verkehrsperiode;
-
-  // now = moment.now();
-  // tomorrow = moment(moment.now()).add(1, 'days')
-  //
-  // selected = [this.now, this.tomorrow];
+  monthsToDisplay: Array<Moment>;
 
   constructor() {
   }
 
   ngOnInit(): void {
-    this.timetableData.verkehrsperiodeById.forEach((operatingPeriod: Verkehrsperiode, id: string ) => {
-      this.operatingPeriods.push(operatingPeriod);
-    });
+    this.operatingPeriods = Array.from(this.timetableData.verkehrsperiodeById.values());
     this.operatingPeriods.sort((n1: Verkehrsperiode, n2: Verkehrsperiode) => {
       let name1 = n1.displayName;
       let name2 = n2.displayName;
@@ -36,17 +32,21 @@ export class OperatingPeriodViewComponent implements OnInit {
       if (name1 < name2) {
         return -1;
       }
-
       return 0;
-    })
+    });
+
   }
 
-  // isSelected(event: any): any {
-  //   const date = moment(event);
-  //   return this.selected.find(x => x == date) ? "selected" : null;
-  // };
-
-  operatingPeriodSelected(operatingPeriod: Event) {
-    console.log(this.selected);
+  updateMonthsToDisplay() {
+    let from = moment(this.selected.fromDate.startOf('month'));
+    let to = moment(this.selected.toDate);
+    this.monthsToDisplay = [];
+    let numberOfMonths = Math.abs(from.diff(to, 'month', false));
+    this.monthsToDisplay.push(moment(from));
+    for (let i = 0; i < numberOfMonths; i++) {
+      this.monthsToDisplay.push(moment(from.add(1, 'months')));
+    }
   }
+
+
 }

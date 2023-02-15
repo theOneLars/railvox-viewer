@@ -29,6 +29,7 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from "@angular/material/snack-bar";
 import { OperatingPeriodViewComponent } from './view/operating-periods/operating-period-view/operating-period-view.component';
 import {MatSelectModule} from "@angular/material/select";
+import { CalendarViewComponent } from './view/operating-periods/calendar-view/calendar-view.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {MatSelectModule} from "@angular/material/select";
     MeldungViewComponent,
     FileDropComponent,
     OperatingPeriodViewComponent,
+    CalendarViewComponent,
   ],
   imports: [
     BrowserModule,

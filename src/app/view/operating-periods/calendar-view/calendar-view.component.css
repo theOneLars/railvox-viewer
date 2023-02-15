@@ -1,0 +1,11 @@
+.calendar-view {
+  width: 300px;
+}
+
+button.day-valid {
+  background: lightgreen;
+}
+
+button.day-not-valid {
+  background: lightcoral;
+}

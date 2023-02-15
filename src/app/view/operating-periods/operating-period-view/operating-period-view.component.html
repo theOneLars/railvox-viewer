@@ -1,12 +1,18 @@
+<div>
 <mat-form-field appearance="fill">
   <mat-label>Verkehrsperioden</mat-label>
-  <mat-select (select)="this.operatingPeriodSelected($event)" [value]="selected">
-    <mat-option *ngFor="let operatingPeriod of operatingPeriods" >
+  <mat-select [(value)]="selected" (selectionChange)="updateMonthsToDisplay()">
+    <mat-option *ngFor="let operatingPeriod of operatingPeriods"
+                [value]="operatingPeriod">
       {{operatingPeriod.displayName}}
     </mat-option>
   </mat-select>
 </mat-form-field>
+</div>
 
-<!--<mat-calendar [(selected)]="selected" [dateClass]="isSelected">-->
-<!--</mat-calendar>-->
-
+<span *ngIf="selected">
+  <app-calendar-view *ngFor="let monthToDisplay of monthsToDisplay"
+                     [operatingPeriod]="selected"
+                     class="float-to-left"
+                     [month]="monthToDisplay"></app-calendar-view>
+</span>

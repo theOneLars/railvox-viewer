@@ -6,16 +6,16 @@ export class Verkehrsperiode {
 
   id: string;
   name: string;
-  fromDate: Moment;
-  toDate: Moment;
+  private _fromDate: Moment;
+  private _toDate: Moment;
   bitMaske: string;
   displayName: string;
 
   constructor(id: string, name: string, fromDate: string, toDate: string, bitMaske: string) {
     this.id = id;
     this.name = name;
-    this.fromDate = Verkehrsperiode.convertToDate(fromDate);
-    this.toDate = Verkehrsperiode.convertToDate(toDate);
+    this._fromDate = Verkehrsperiode.convertToDate(fromDate);
+    this._toDate = Verkehrsperiode.convertToDate(toDate);
     this.bitMaske = bitMaske;
     this.displayName = name + ' (' + id + ')';
   }
@@ -28,13 +28,13 @@ export class Verkehrsperiode {
   }
 
   public getNumberOfDays() {
-    return this.toDate.diff(this.fromDate, 'days');
+    return this._toDate.diff(this._fromDate, 'days');
   }
 
   public isValidOnDay(input: Moment): boolean {
     let dateToCheck = moment(input);
-    let fromDate = moment(this.fromDate);
-    let toDate = moment(this.toDate);
+    let fromDate = moment(this._fromDate);
+    let toDate = moment(this._toDate);
 
     if (dateToCheck > toDate || dateToCheck < fromDate) {
       return false;
@@ -80,4 +80,11 @@ export class Verkehrsperiode {
   }
 
 
+  get fromDate(): moment.Moment {
+    return moment(this._fromDate);
+  }
+
+  get toDate(): moment.Moment {
+    return moment(this._toDate);
+  }
 }
