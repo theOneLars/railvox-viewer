@@ -13,7 +13,7 @@ import {TimetableData} from "../../../business/timetable-data";
 export class TrainsOverviewComponent implements OnInit {
 
   @Input()
-  data: TimetableData;
+  timetableData: TimetableData;
 
   zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
   tagFilter = new FormControl(moment(), [Validators.required]);
@@ -29,7 +29,7 @@ export class TrainsOverviewComponent implements OnInit {
     if (this.zugnummerFilter.valid && this.tagFilter.valid) {
       let zugnummer: string = this.zugnummerFilter.value || '';
       let day = this.tagFilter.value;
-      this.filteredTagesleistungen = this.data.tagesLeistungen
+      this.filteredTagesleistungen = this.timetableData.tagesLeistungen
         .filter(tl => tl.hasTrainWithNumber(zugnummer))
         .filter(tl => tl.hasTrainValidForDay(<Moment>day));
     }
