@@ -1,13 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Tagesleistung} from "../../model/tagesleistung";
-import {FormControl, Validators} from "@angular/forms";
 import {TimetableData} from "../timetable-data";
 import {XmlParser} from "../xml-parser";
 import {FileUploadService} from "../../service/file-upload.service";
 import {InputFile} from "../../model/input-file";
-import {Moment} from "moment";
-import * as moment from "moment";
 import {MessageService} from "../../service/message.service";
 
 @Component({
@@ -16,10 +12,6 @@ import {MessageService} from "../../service/message.service";
   styleUrls: ['./railvox-parser.component.css']
 })
 export class RailvoxParserComponent implements OnDestroy {
-
-  zugnummerFilter = new FormControl('', [Validators.required, Validators.maxLength(6), Validators.minLength(3)]);
-  tagFilter = new FormControl(moment(), [Validators.required]);
-  filteredTagesleistungen: Tagesleistung[] = [];
 
   data: TimetableData;
 
@@ -51,14 +43,5 @@ export class RailvoxParserComponent implements OnDestroy {
       });
   }
 
-  filterTagesleistungen() {
-    if (this.zugnummerFilter.valid && this.tagFilter.valid) {
-      let zugnummer: string = this.zugnummerFilter.value || '';
-      let day = this.tagFilter.value;
-      this.filteredTagesleistungen = this.data.tagesLeistungen
-        .filter(tl => tl.hasTrainWithNumber(zugnummer))
-        .filter(tl => tl.hasTrainValidForDay(<Moment>day));
-    }
-  }
 }
 

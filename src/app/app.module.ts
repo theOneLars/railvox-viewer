@@ -30,6 +30,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from "@angular/materia
 import { OperatingPeriodViewComponent } from './view/operating-periods/operating-period-view/operating-period-view.component';
 import {MatSelectModule} from "@angular/material/select";
 import { CalendarViewComponent } from './view/operating-periods/calendar-view/calendar-view.component';
+import { TrainsOverviewComponent } from './view/trains/trains-overview/trains-overview.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { CalendarViewComponent } from './view/operating-periods/calendar-view/ca
     FileDropComponent,
     OperatingPeriodViewComponent,
     CalendarViewComponent,
+    TrainsOverviewComponent,
   ],
   imports: [
     BrowserModule,
