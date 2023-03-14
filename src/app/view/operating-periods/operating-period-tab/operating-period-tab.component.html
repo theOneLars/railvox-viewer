@@ -1,7 +1,7 @@
 <div>
 <mat-form-field appearance="fill">
   <mat-label>Verkehrsperioden</mat-label>
-  <mat-select [(value)]="selected" (selectionChange)="updateMonthsToDisplay()">
+  <mat-select [(value)]="viewModel.current" (selectionChange)="updateMonthsToDisplay()">
     <mat-option *ngFor="let operatingPeriod of operatingPeriods"
                 [value]="operatingPeriod">
       {{operatingPeriod.displayName}}
@@ -10,9 +10,9 @@
 </mat-form-field>
 </div>
 
-<span *ngIf="selected">
+<span *ngIf="viewModel.current">
   <app-calendar-view *ngFor="let monthToDisplay of monthsToDisplay"
-                     [operatingPeriod]="selected"
+                     [operatingPeriod]="viewModel.current"
                      class="float-to-left"
                      [month]="monthToDisplay"></app-calendar-view>
 </span>

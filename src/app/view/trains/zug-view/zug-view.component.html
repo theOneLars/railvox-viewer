@@ -3,7 +3,7 @@
     <mat-expansion-panel-header>
       <mat-panel-title>
         <span class="mat-h3">
-          <mat-icon [matTooltip]="'Zug mit Nummer'">directions_railway</mat-icon>
+          <mat-icon [matTooltip]="'Zug mit Nummer'" class="train-icon">directions_railway</mat-icon>
           {{zug.zugnummer}}
         </span>
       </mat-panel-title>
@@ -11,7 +11,9 @@
     <ng-template matExpansionPanelContent>
       <ul>
         <li class="mat-body">DK-Attribut: {{zug.dk}}</li>
-        <li class="mat-body">Verkehrsperiode: {{zug.verkehrsperiode.name}} ({{zug.vpId}})</li>
+        <li class="mat-body">Verkehrsperiode: {{zug.verkehrsperiode.name}} ({{zug.vpId}})
+          <mat-icon [matTooltip]="'Verkehrsperide einsehen'" class="search" color="primary" (click)="navigateToVPTab(zug.verkehrsperiode)">search</mat-icon>
+        </li>
         <li class="mat-body" *ngIf="zug.hasTractions()">Traktionen: {{zug.getTractionsAsString()}}</li>
         <li class="mat-body" *ngIf="zug.hasFolgezug()">Folgezug: {{zug.folgezugNumber}}</li>
       </ul>

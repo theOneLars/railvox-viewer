@@ -7,10 +7,10 @@ import {TimetableData} from "../../../business/timetable-data";
 
 @Component({
   selector: 'trains-overview',
-  templateUrl: './trains-overview.component.html',
-  styleUrls: ['./trains-overview.component.css']
+  templateUrl: './trains-tab.component.html',
+  styleUrls: ['./trains-tab.component.css']
 })
-export class TrainsOverviewComponent implements OnInit {
+export class TrainsTabComponent implements OnInit {
 
   @Input()
   timetableData: TimetableData;

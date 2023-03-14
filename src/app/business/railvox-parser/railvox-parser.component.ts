@@ -5,6 +5,7 @@ import {XmlParser} from "../xml-parser";
 import {FileUploadService} from "../../service/file-upload.service";
 import {InputFile} from "../../model/input-file";
 import {MessageService} from "../../service/message.service";
+import {TabNavigationService} from "../../service/tab-navigation.service";
 
 @Component({
   selector: 'app-railvox-parser',
@@ -14,14 +15,21 @@ import {MessageService} from "../../service/message.service";
 export class RailvoxParserComponent implements OnDestroy {
 
   data: TimetableData;
+  tabindex: number = 0;
 
-  constructor(private http: HttpClient, private fileUploadService: FileUploadService, private messageService: MessageService) {
+  constructor(private http: HttpClient,
+              private tabNavigationService: TabNavigationService,
+              private fileUploadService: FileUploadService,
+              private messageService: MessageService) {
     // this.loadXML();
     this.fileUploadService.getEvent()
       .subscribe((event: InputFile) => {
         this.data = new XmlParser().parseExport(event.content);
         this.messageService.sendMessage('Import done');
       });
+    this.tabNavigationService.getTabNavigationEvent().subscribe(targetTabIndex => {
+      this.tabindex = targetTabIndex;
+    });
   }
 
   ngOnDestroy(): void {
@@ -29,7 +37,7 @@ export class RailvoxParserComponent implements OnDestroy {
   }
 
   loadXML(): void {
-    this.http.get('assets/exportRTZ.xml',
+    this.http.get('assets/export.xml',
       {
         headers: new HttpHeaders()
           .set('Content-Type', 'text/xml')

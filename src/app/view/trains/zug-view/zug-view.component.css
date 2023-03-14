@@ -1,4 +1,10 @@
-mat-icon {
+mat-icon.train-icon {
   vertical-align: middle;
   color: red;
+}
+
+mat-icon.search {
+  transform: scale(0.9);
+  vertical-align: middle;
+  cursor: pointer;
 }

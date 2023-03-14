@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TrainsOverviewComponent } from './trains-overview.component';
+import { TrainsTabComponent } from './trains-tab.component';
 
 describe('TrainsOverviewComponent', () => {
-  let component: TrainsOverviewComponent;
-  let fixture: ComponentFixture<TrainsOverviewComponent>;
+  let component: TrainsTabComponent;
+  let fixture: ComponentFixture<TrainsTabComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TrainsOverviewComponent ]
+      declarations: [ TrainsTabComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TrainsOverviewComponent);
+    fixture = TestBed.createComponent(TrainsTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

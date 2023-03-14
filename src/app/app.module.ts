@@ -27,10 +27,10 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from "@angular/material/snack-bar";
-import { OperatingPeriodViewComponent } from './view/operating-periods/operating-period-view/operating-period-view.component';
+import { OperatingPeriodTabComponent } from './view/operating-periods/operating-period-tab/operating-period-tab.component';
 import {MatSelectModule} from "@angular/material/select";
 import { CalendarViewComponent } from './view/operating-periods/calendar-view/calendar-view.component';
-import { TrainsOverviewComponent } from './view/trains/trains-overview/trains-overview.component';
+import { TrainsTabComponent } from './view/trains/trains-tab/trains-tab.component';
 
 @NgModule({
   declarations: [
@@ -42,9 +42,9 @@ import { TrainsOverviewComponent } from './view/trains/trains-overview/trains-ov
     TriggerViewComponent,
     MeldungViewComponent,
     FileDropComponent,
-    OperatingPeriodViewComponent,
+    OperatingPeriodTabComponent,
     CalendarViewComponent,
-    TrainsOverviewComponent,
+    TrainsTabComponent,
   ],
   imports: [
     BrowserModule,

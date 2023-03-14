@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OperatingPeriodViewComponent } from './operating-period-view.component';
+import { OperatingPeriodTabComponent } from './operating-period-tab.component';
 
 describe('OperatingPeriodViewComponent', () => {
-  let component: OperatingPeriodViewComponent;
-  let fixture: ComponentFixture<OperatingPeriodViewComponent>;
+  let component: OperatingPeriodTabComponent;
+  let fixture: ComponentFixture<OperatingPeriodTabComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OperatingPeriodViewComponent ]
+      declarations: [ OperatingPeriodTabComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OperatingPeriodViewComponent);
+    fixture = TestBed.createComponent(OperatingPeriodTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
