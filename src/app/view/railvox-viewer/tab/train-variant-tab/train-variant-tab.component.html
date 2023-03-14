@@ -1,0 +1,48 @@
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Zugnummer</mat-label>
+    <mat-select [(value)]="viewModel.selectedTrainNumber" (selectionChange)="updateVariantsToDisplay()">
+      <mat-option *ngFor="let trainNumber of viewModel.trainNumbers"
+                  [value]="trainNumber">
+        {{trainNumber}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <div *ngIf="viewModel.selectedTrainNumber">
+      <span class="mat-title">Varianten:</span>
+        <div *ngFor="let variant of viewModel.variants">
+
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+            <span class="mat-h3">
+              Variante {{variant.id}}
+              <mat-icon [matTooltip]="'Variante einsehen'" class="search" color="primary"
+                        (click)="navigateToTrainsTab(variant)">fingerprint
+                  </mat-icon>
+            </span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <span class="mat-card-subtitle">
+                <div class="mat-body-1">DK: {{variant.dk}}</div>
+                <div class="mat-body-1">Passagen: {{variant.passagen.length}}</div>
+                <div class="mat-body-1">Aktive Tage: {{variant.verkehrsperiode.getNumberOfActiveDays()}}</div>
+                <div class="mat-body-1" *ngIf="variant.hasFolgezug()">Folgezugnummer: {{variant.folgezugNumber}}</div>
+                <div class="mat-body-1">
+                  Verkehrsperiode: {{variant.verkehrsperiode.name}} ({{variant.verkehrsperiode.id}})
+                   <mat-icon [matTooltip]="'Verkehrsperide einsehen'" class="search" color="primary"
+                             (click)="navigateToVPTab(variant.verkehrsperiode)">search
+                  </mat-icon>
+                </div>
+              </span>
+            </ng-template>
+          </mat-expansion-panel>
+        </div>
+    </div>
+  </mat-card-content>
+</mat-card>

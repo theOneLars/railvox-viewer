@@ -8,3 +8,9 @@ mat-icon.search {
   vertical-align: middle;
   cursor: pointer;
 }
+
+mat-icon.finger-print {
+  transform: scale(0.9);
+  vertical-align: middle;
+  cursor: pointer;
+}

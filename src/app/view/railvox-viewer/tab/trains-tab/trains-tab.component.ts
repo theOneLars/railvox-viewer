@@ -4,6 +4,7 @@ import * as moment from "moment";
 import {Moment} from "moment";
 import {Tagesleistung} from "../../../../model/tagesleistung";
 import {TimetableData} from "../../../../business/timetable-data";
+import {TrainTabService} from "../../../../service/train-tab.service";
 
 @Component({
   selector: 'trains-overview',
@@ -20,7 +21,13 @@ export class TrainsTabComponent implements OnInit {
 
   filteredTagesleistungen: Tagesleistung[] = [];
 
-  constructor() { }
+  constructor(private trainTabService: TrainTabService) {
+    this.trainTabService.getEvent().subscribe(config => {
+      this.zugnummerFilter.setValue(config.trainNumber);
+      this.tagFilter.setValue(config.selectedDate);
+      this.filterTagesleistungen();
+    });
+  }
 
   ngOnInit(): void {
   }

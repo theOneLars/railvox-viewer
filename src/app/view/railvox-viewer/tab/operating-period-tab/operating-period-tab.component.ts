@@ -7,7 +7,7 @@ import {OperatingPeriodTabFilterConfig} from "../../../../model/operating-period
 import {OperatingPeriodViewService} from "../../../../service/operating-period-view.service";
 
 @Component({
-  selector: 'operating-period-view',
+  selector: 'operating-period-tab',
   templateUrl: './operating-period-tab.component.html',
   styleUrls: ['./operating-period-tab.component.css']
 })

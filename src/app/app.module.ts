@@ -31,6 +31,7 @@ import { OperatingPeriodTabComponent } from './view/railvox-viewer/tab/operating
 import {MatSelectModule} from "@angular/material/select";
 import { CalendarViewComponent } from './view/railvox-viewer/tab/operating-period-tab/calendar-view/calendar-view.component';
 import { TrainsTabComponent } from './view/railvox-viewer/tab/trains-tab/trains-tab.component';
+import { TrainVariantTabComponent } from './view/railvox-viewer/tab/train-variant-tab/train-variant-tab.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { TrainsTabComponent } from './view/railvox-viewer/tab/trains-tab/trains-
     OperatingPeriodTabComponent,
     CalendarViewComponent,
     TrainsTabComponent,
+    TrainVariantTabComponent,
   ],
   imports: [
     BrowserModule,

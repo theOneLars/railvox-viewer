@@ -10,6 +10,9 @@
     </mat-expansion-panel-header>
     <ng-template matExpansionPanelContent>
       <ul>
+        <li class="mat-body">Id: {{zug.id}}
+          <mat-icon [matTooltip]="'Eindeutige ID des Zuges'" class="finger-print" color="primary">fingerprint</mat-icon>
+        </li>
         <li class="mat-body">DK-Attribut: {{zug.dk}}</li>
         <li class="mat-body">Verkehrsperiode: {{zug.verkehrsperiode.name}} ({{zug.vpId}})
           <mat-icon [matTooltip]="'Verkehrsperide einsehen'" class="search" color="primary" (click)="navigateToVPTab(zug.verkehrsperiode)">search</mat-icon>

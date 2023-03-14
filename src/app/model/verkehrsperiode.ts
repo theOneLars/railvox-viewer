@@ -68,6 +68,18 @@ export class Verkehrsperiode {
     return result;
   }
 
+  public getFirstValidDay(): Moment {
+    let position = this.getBinaryBitmask().indexOf('1');
+    if (position == -1) {
+      return this.fromDate;
+    }
+    return this.fromDate.add(position, 'days');
+  }
+
+  public getNumberOfActiveDays(): number {
+    return this.getBinaryBitmask().split('1').length - 1;
+  }
+
   private fromHexString(s: string, days: number): string {
     let asInt = Number.parseInt(s, 16);
     let result = asInt.toString(2);
