@@ -1,8 +1,8 @@
+<file-drop></file-drop>
 <span class="mat-title" *ngIf="data">{{this.data.title}}</span>
 <mat-tab-group *ngIf="data" mat-align-tabs="start" [(selectedIndex)]="tabindex">
   <mat-tab label="Züge">
     <trains-overview [timetableData]="data"></trains-overview>
-
   </mat-tab>
   <mat-tab label="Verkehrsperioden">
     <operating-period-view [timetableData]="data"></operating-period-view>
