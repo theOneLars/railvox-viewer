@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Zug} from "../../../model/zug";
-import {Verkehrsperiode} from "../../../model/verkehrsperiode";
-import {OperatingPeriodViewService} from "../../../service/operating-period-view.service";
-import {OperatingPeriodTabFilterConfig} from "../../../model/operating-period-tab-filter-config";
-import {TabNavigationService} from "../../../service/tab-navigation.service";
+import {Zug} from "../../../../../model/zug";
+import {Verkehrsperiode} from "../../../../../model/verkehrsperiode";
+import {OperatingPeriodViewService} from "../../../../../service/operating-period-view.service";
+import {OperatingPeriodTabFilterConfig} from "../../../../../model/operating-period-tab-filter-config";
+import {TabNavigationService} from "../../../../../service/tab-navigation.service";
 
 @Component({
   selector: 'zug-view',

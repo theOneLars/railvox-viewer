@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TimetableData} from "../../../business/timetable-data";
-import {Verkehrsperiode} from "../../../model/verkehrsperiode";
+import {TimetableData} from "../../../../business/timetable-data";
+import {Verkehrsperiode} from "../../../../model/verkehrsperiode";
 import * as moment from "moment";
 import {Moment} from "moment";
-import {OperatingPeriodTabFilterConfig} from "../../../model/operating-period-tab-filter-config";
-import {OperatingPeriodViewService} from "../../../service/operating-period-view.service";
+import {OperatingPeriodTabFilterConfig} from "../../../../model/operating-period-tab-filter-config";
+import {OperatingPeriodViewService} from "../../../../service/operating-period-view.service";
 
 @Component({
   selector: 'operating-period-view',

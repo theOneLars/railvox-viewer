@@ -1,18 +1,18 @@
 import {Component, OnDestroy} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {TimetableData} from "../timetable-data";
-import {XmlParser} from "../xml-parser";
+import {TimetableData} from "../../business/timetable-data";
+import {XmlParser} from "../../business/xml-parser";
 import {FileUploadService} from "../../service/file-upload.service";
 import {InputFile} from "../../model/input-file";
 import {MessageService} from "../../service/message.service";
 import {TabNavigationService} from "../../service/tab-navigation.service";
 
 @Component({
-  selector: 'app-railvox-parser',
-  templateUrl: './railvox-parser.component.html',
-  styleUrls: ['./railvox-parser.component.css']
+  selector: 'railvox-viewer',
+  templateUrl: './railvox-viewer.component.html',
+  styleUrls: ['./railvox-viewer.component.css']
 })
-export class RailvoxParserComponent implements OnDestroy {
+export class RailvoxViewerComponent implements OnDestroy {
 
   data: TimetableData;
   tabindex: number = 0;

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Passage} from "../../../model/passage";
+import {Passage} from "../../../../../model/passage";
 
 @Component({
   selector: 'app-passage-view',

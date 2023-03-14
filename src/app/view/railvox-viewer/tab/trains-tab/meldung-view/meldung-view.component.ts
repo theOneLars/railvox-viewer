@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Meldung} from "../../../model/meldung";
-import {MeldungVariante, VariantenType} from "../../../model/meldung-variante";
+import {Meldung} from "../../../../../model/meldung";
+import {MeldungVariante} from "../../../../../model/meldung-variante";
 
 @Component({
   selector: 'meldung-view',

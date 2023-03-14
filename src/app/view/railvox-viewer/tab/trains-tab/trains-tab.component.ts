@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import * as moment from "moment";
 import {Moment} from "moment";
-import {Tagesleistung} from "../../../model/tagesleistung";
-import {TimetableData} from "../../../business/timetable-data";
+import {Tagesleistung} from "../../../../model/tagesleistung";
+import {TimetableData} from "../../../../business/timetable-data";
 
 @Component({
   selector: 'trains-overview',

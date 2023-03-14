@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {Verkehrsperiode} from "../../../model/verkehrsperiode";
+import {Verkehrsperiode} from "../../../../../model/verkehrsperiode";
 import {Moment} from "moment";
 import {DateRange, MatCalendarCellCssClasses} from "@angular/material/datepicker";
 import * as moment from "moment";

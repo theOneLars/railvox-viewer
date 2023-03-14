@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Tagesleistung} from "../../../model/tagesleistung";
+import {Tagesleistung} from "../../../../../model/tagesleistung";
 
 @Component({
   selector: 'tagesleistung-view',

@@ -4,19 +4,19 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RailvoxParserComponent} from './business/railvox-parser/railvox-parser.component';
+import {RailvoxViewerComponent} from './view/railvox-viewer/railvox-viewer.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatCardModule} from '@angular/material/card';
-import {TagesleistungViewComponent} from './view/trains/tagesleistung-view/tagesleistung-view.component';
-import {ZugViewComponent} from './view/trains/zug-view/zug-view.component';
-import {PassageViewComponent} from './view/trains/passage-view/passage-view.component';
-import {TriggerViewComponent} from './view/trains/trigger-view/trigger-view.component';
+import {TagesleistungViewComponent} from './view/railvox-viewer/tab/trains-tab/tagesleistung-view/tagesleistung-view.component';
+import {ZugViewComponent} from './view/railvox-viewer/tab/trains-tab/zug-view/zug-view.component';
+import {PassageViewComponent} from './view/railvox-viewer/tab/trains-tab/passage-view/passage-view.component';
+import {TriggerViewComponent} from './view/railvox-viewer/tab/trains-tab/trigger-view/trigger-view.component';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MeldungViewComponent} from './view/trains/meldung-view/meldung-view.component';
+import {MeldungViewComponent} from './view/railvox-viewer/tab/trains-tab/meldung-view/meldung-view.component';
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -27,15 +27,15 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from "@angular/material/snack-bar";
-import { OperatingPeriodTabComponent } from './view/operating-periods/operating-period-tab/operating-period-tab.component';
+import { OperatingPeriodTabComponent } from './view/railvox-viewer/tab/operating-period-tab/operating-period-tab.component';
 import {MatSelectModule} from "@angular/material/select";
-import { CalendarViewComponent } from './view/operating-periods/calendar-view/calendar-view.component';
-import { TrainsTabComponent } from './view/trains/trains-tab/trains-tab.component';
+import { CalendarViewComponent } from './view/railvox-viewer/tab/operating-period-tab/calendar-view/calendar-view.component';
+import { TrainsTabComponent } from './view/railvox-viewer/tab/trains-tab/trains-tab.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RailvoxParserComponent,
+    RailvoxViewerComponent,
     TagesleistungViewComponent,
     ZugViewComponent,
     PassageViewComponent,
