@@ -73,7 +73,7 @@
           fm="0000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000"/>
     </VerkehrsperiodeListe>
     <TL nr="4084">
-      <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4085">
+      <Z id="203" zn="1008" dk="DAV-LQ" vp_id="4555">
         <P bp_id="4086" bz="05:00:00.000" ty="1" s_id="4088">
           <T kc="zeitstation" po="2" pl="0">
             <TP na="zeitvor" we="120"/>
@@ -100,7 +100,7 @@
           <TR z_id="203"/>
         </P>
       </Z>
-      <Z id="204" zn="1009" dk="DAV-LQ-CH" vp_id="4085">
+      <Z id="204" zn="1009" dk="DAV-LQ-CH" vp_id="4555">
         <P bp_id="4086" bz="05:00:00.000" ty="1" s_id="4088">
           <T kc="zeitstation" po="2" pl="0">
             <TP na="zeitvor" we="120"/>
