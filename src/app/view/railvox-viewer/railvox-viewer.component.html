@@ -1,4 +1,4 @@
-<file-drop></file-drop>
+<file-drop *ngIf="!data"></file-drop>
 <span class="mat-title" *ngIf="data">{{this.data.title}}</span>
 <mat-tab-group *ngIf="data" mat-align-tabs="start" [(selectedIndex)]="tabindex">
   <mat-tab label="Züge">
