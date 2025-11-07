@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {RailvoxViewerComponent} from './railvox-viewer.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {MatCardModule} from "@angular/material/card";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatLegacyCardModule as MatCardModule} from "@angular/material/legacy-card";
+import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
+import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/legacy-snack-bar";
 
 describe('RailvoxParserComponent', () => {
   let component: RailvoxViewerComponent;

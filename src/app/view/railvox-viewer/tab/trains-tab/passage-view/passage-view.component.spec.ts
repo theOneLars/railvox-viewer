@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PassageViewComponent } from './passage-view.component';
-import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/legacy-snack-bar";
 import {Passage} from 'src/app/model/passage';
 import {Betriebspunkt} from 'src/app/model/betriebspunkt';
 import {StreckenAbschnitt} from 'src/app/model/strecken-abschnitt';

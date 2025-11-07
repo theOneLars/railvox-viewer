@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {MessageService} from './message.service';
-import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/legacy-snack-bar";
 import {MatIconModule} from "@angular/material/icon";
 
 describe('MessageService', () => {
