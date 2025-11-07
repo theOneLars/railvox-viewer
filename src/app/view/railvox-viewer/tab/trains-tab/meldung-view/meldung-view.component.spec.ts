@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {MeldungViewComponent} from './meldung-view.component';
-import {Meldung} from "../../model/meldung";
-import {MeldungVariante, VariantenType} from "../../model/meldung-variante";
-import {SprachProvider} from "../../business/test-provider/sprach-provider";
+import {MeldungVariante, VariantenType} from 'src/app/model/meldung-variante';
+import {Meldung} from 'src/app/model/meldung';
+import {SprachProvider} from 'src/app/business/test-provider/sprach-provider';
 
 describe('MeldungViewComponent', () => {
   let component: MeldungViewComponent;
