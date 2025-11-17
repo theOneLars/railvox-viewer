@@ -12,35 +12,99 @@ import {Trigger} from "../model/trigger";
 import {TimetableData} from "./timetable-data";
 import {Traktion} from "../model/traktion";
 import {Verkehrsperiode} from "../model/verkehrsperiode";
+import * as sax from "sax";
+import {Stammdaten} from 'src/app/model/stammdaten';
+import {Fahrplan} from 'src/app/model/fahrplan';
 
 const moment = require('moment');
 
 export class XmlParser {
 
+  insideMeldungListe = false;
+  buffer = '';
+
   data: TimetableData = new TimetableData();
 
   public parseExport(xml: string): TimetableData {
-    let parsedXML = this.parseXml(xml);
-    this.data = new TimetableData();
-    this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);
-    this.data.spracheById = this.mapSprachen(parsedXML);
-    this.data.verkehrsperiodeById = this.mapVerkehrsperioden(parsedXML);
-    this.data.meldungVarianteById = new Map([
-      ...this.mapAudioMeldungVarianten(parsedXML),
-      ...this.mapTextMeldungVarianten(parsedXML),
-      ...this.mapBildMeldungVarianten(parsedXML)]);
-    this.data.meldungenById = this.mapMeldungen(parsedXML);
-    this.data.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
-    this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML);
-    this.data.title = this.mapTitle(parsedXML);
-    return this.data;
-  }
+    // let parsedXML = this.parseXml(xml);
+    // this.data = new TimetableData();
 
-  private mapTitle(parsedXML: any): string {
-    let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode> this.data.verkehrsperiodeById.get([... this.data.verkehrsperiodeById.keys()][0]);
-    let result =  parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem'];
-    result += ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
-    return result;
+    let strict = true // set to false for html-mode
+    var parser = sax.parser(strict)
+
+    parser.onopentag = (node) => {
+
+      if (this.insideMeldungListe) {
+        this.appendOpeningNodeToBuffer(node)
+      } else {
+        switch (node.name) {
+          case 'MeldungListe':
+            this.mapMeldungListeNode(node)
+            break
+          case 'BV':
+            this.mapBildMeldungVariantenNode(node)
+            break
+          case 'AV':
+            this.mapAudioVarianteNode(node)
+            break
+          case 'TV':
+            this.mapTextMeldungVarianteNode(node)
+            break
+          case 'BP':
+            this.mapBetriebspunktNode(node)
+            break;
+          case 'Sprache':
+            this.mapSprachNode(node)
+            break;
+          case 'Fahrplan':
+            this.mapFahrplanNode(node)
+            break
+          case 'VP':
+            this.mapVerkehrsperiodeNode(node)
+            break
+          case 'KISDZStammdaten':
+            this.mapKISDZStammdatenNode(node)
+            break
+          default:
+          // console.log(node)
+        }
+      }
+    }
+
+    parser.onclosetag = (node: any) => {
+
+      if (typeof node === 'undefined') {
+        // do nothing
+      } else if (this.insideMeldungListe) {
+        this.appendClosingNodeToBuffer(node)
+      }
+
+      switch (node){
+        case 'MeldungListe':
+          this.insideMeldungListe = false
+          let parsedMeldungen = this.parseXml(this.buffer)
+          // todo: change pattern of assignment inside the handling method
+          this.data.meldungenById = this.mapMeldungen(parsedMeldungen)
+          break
+      }
+
+    }
+
+    parser.write(xml).close()
+    console.log('meldungen: ', this.data.meldungenById.size)
+
+    // this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);  // done
+    // this.data.spracheById = this.mapSprachen(parsedXML);   // done
+    // this.data.verkehrsperiodeById = this.mapVerkehrsperioden(parsedXML);      // done
+    // this.data.meldungVarianteById = new Map([
+    //   ...this.mapAudioMeldungVarianten(parsedXML),    // done
+    //   ...this.mapTextMeldungVarianten(parsedXML),     // done
+    //   ...this.mapBildMeldungVarianten(parsedXML)]);   // done
+    // this.data.meldungenById = this.mapMeldungen(parsedXML);  // done
+    // this.data.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
+    // this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML);
+    // this.data.title = this.mapTitle(parsedXML);
+    return this.data;
   }
 
   public parseXml(data: string) {
@@ -51,6 +115,13 @@ export class XmlParser {
     };
     let fastXmlParser = new XMLParser(options);
     return fastXmlParser.parse(data, {});
+  }
+
+  private mapTitle(parsedXML: any): string {
+    let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode>this.data.verkehrsperiodeById.get([...this.data.verkehrsperiodeById.keys()][0]);
+    let result = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem'];
+    result += ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
+    return result;
   }
 
   public mapVerkehrsperioden(parsedXML: any): Map<string, Verkehrsperiode> {
@@ -64,6 +135,15 @@ export class XmlParser {
     return result;
   }
 
+  public mapVerkehrsperiodeNode(node: any) {
+    let validFrom = this.data.fahrplan.gueltigAb;
+    let validTo = this.data.fahrplan.gueltigBis
+    this.data.verkehrsperiodeById.set(
+      node.attributes['id'],
+      new Verkehrsperiode(node.attributes['id'], node.attributes['co'], validFrom, validTo, node.attributes['fm'])
+    )
+  }
+
   public mapSprachen(parsedXML: any): Map<string, Sprache> {
     let sprachen: any = this.ensureCollection(parsedXML.KISDZStammdaten.SprachenListe.Sprache);
     let result = new Map<string, Sprache>();
@@ -73,8 +153,12 @@ export class XmlParser {
     return result;
   }
 
+  public mapSprachNode(node: any) {
+    this.data.spracheById.set(node.attributes.id, new Sprache(node.attributes.co, node.attributes.be))
+  }
+
   mapMeldungen(parsedXML: any): Map<string, Meldung> {
-    let meldungen: any = this.ensureCollection(parsedXML.KISDZStammdaten.MeldungListe.M);
+    let meldungen: any = this.ensureCollection(parsedXML.MeldungListe.M);
     let result = new Map<string, Meldung>();
     meldungen.forEach((meldung: any) => {
       let varianten: MeldungVariante[] = [];
@@ -111,6 +195,10 @@ export class XmlParser {
     return result;
   }
 
+  public mapBetriebspunktNode(node: any) {
+    this.data.betriebspunkById.set(node.attributes.id, new Betriebspunkt(node.attributes.name, node.attributes.ak))
+  }
+
   public mapStreckenabschnitte(parsedXML: any): Map<string, StreckenAbschnitt> {
     let streckenabschnitte: any = this.ensureCollection(parsedXML.KISDZStammdaten.Netz.StreckenabschnittListe.SA);
     let result = new Map<string, StreckenAbschnitt>();
@@ -130,7 +218,7 @@ export class XmlParser {
       zuege.forEach((zug: any) => {
         zugNummerById.set(zug['@_id'], zug['@_zn']);
         trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'],
-          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode> this.data.verkehrsperiodeById.get(zug['@_vp_id']), this.mapFolgezugId(zug)));
+          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode>this.data.verkehrsperiodeById.get(zug['@_vp_id']), this.mapFolgezugId(zug)));
       });
       let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
       result.push(tl);
@@ -220,7 +308,7 @@ export class XmlParser {
     let passages = this.ensureCollection(zugJSON.P);
     passages.forEach((passage: any) => {
       if (passage.F && passage.F['@_z_id']) {
-        folgezugId =  passage.F['@_z_id'];
+        folgezugId = passage.F['@_z_id'];
       }
     });
     return folgezugId;
@@ -247,5 +335,74 @@ export class XmlParser {
     let result = [];
     result.push(items);
     return result.filter(XmlParser.notUndefined());
+  }
+
+  private mapKISDZStammdatenNode(node: any) {
+    this.data.stammdaten = new Stammdaten(
+      node.attributes['formatversion'],
+      node.attributes['erzeugt_von'],
+      node.attributes['erzeugt_am'],
+      node.attributes['zielsystem'],
+      node.attributes['fahrplanversion']
+    )
+  }
+
+  private mapFahrplanNode(node: any) {
+    this.data.fahrplan = new Fahrplan(node.attributes['gueltig_ab'], node.attributes['gueltig_bis'])
+  }
+
+  private mapAudioVarianteNode(node: any) {
+    let meldungVariante = new MeldungVariante(
+      VariantenType.AudioMeldung,
+      node.attributes['fo'],
+      node.attributes['dn'],
+      '',
+      // Achtung: Reihenfolge ist wichtig, ggf. entkoppeln
+      this.data.spracheById.get(node.attributes['sp_id'])
+    );
+    this.data.meldungVarianteById.set(node.attributes['id'], meldungVariante)
+  }
+
+  private mapTextMeldungVarianteNode(node: any) {
+
+    let meldungVariante = new MeldungVariante(
+      VariantenType.TextMeldung,
+      '',
+      '',
+      node.attributes['tx']
+    )
+    this.data.meldungVarianteById.set(node.attributes['id'], meldungVariante)
+  }
+
+  private mapBildMeldungVariantenNode(node: any) {
+    let meldungVariante = new MeldungVariante(
+      VariantenType.BildMeldung,
+      node.attributes['fo'],
+      node.attributes['dn'],
+      '')
+
+    this.data.meldungVarianteById.set(node.attributes['id'], meldungVariante)
+  }
+
+  private mapMeldungListeNode(node: any) {
+    this.insideMeldungListe = true
+    this.buffer = ''
+    this.appendOpeningNodeToBuffer(node)
+    if (node.isSelfClosing) {
+      this.insideMeldungListe = false
+    }
+  }
+
+  private appendOpeningNodeToBuffer(node: any) {
+    let tag = `<${node.name}`;
+    for (const attr in node.attributes) {
+      tag += ` ${attr}="${node.attributes[attr]}"`;
+    }
+    tag += '>';
+    this.buffer += tag
+  }
+
+  private appendClosingNodeToBuffer(node: any) {
+    this.buffer += `</${node}>`
   }
 }

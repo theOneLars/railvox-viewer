@@ -5,10 +5,14 @@ import {Sprache} from "../model/sprache";
 import {Meldung} from "../model/meldung";
 import {Tagesleistung} from "../model/tagesleistung";
 import {Verkehrsperiode} from "../model/verkehrsperiode";
+import {Stammdaten} from 'src/app/model/stammdaten';
+import {Fahrplan} from 'src/app/model/fahrplan';
 
 export class TimetableData {
 
   title: string;
+  stammdaten: Stammdaten;
+  fahrplan: Fahrplan;
   betriebspunkById = new Map<string, Betriebspunkt>();
   verkehrsperiodeById = new Map<string, Verkehrsperiode>();
   streckenabschnitteById = new Map<string, StreckenAbschnitt>();
