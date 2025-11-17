@@ -14,7 +14,6 @@ import {TriggerViewComponent} from './view/railvox-viewer/tab/trains-tab/trigger
 import {MAT_LEGACY_FORM_FIELD_DEFAULT_OPTIONS as MAT_FORM_FIELD_DEFAULT_OPTIONS, MatLegacyFormFieldModule as MatFormFieldModule} from "@angular/material/legacy-form-field";
 import {MatLegacyInputModule as MatInputModule} from "@angular/material/legacy-input";
 import {ReactiveFormsModule} from "@angular/forms";
-import {MatLegacyTabsModule as MatTabsModule} from "@angular/material/legacy-tabs";
 import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
 import {MeldungViewComponent} from './view/railvox-viewer/tab/trains-tab/meldung-view/meldung-view.component';
 import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-list";
@@ -32,6 +31,7 @@ import {MatLegacySelectModule as MatSelectModule} from "@angular/material/legacy
 import { CalendarViewComponent } from './view/railvox-viewer/tab/operating-period-tab/calendar-view/calendar-view.component';
 import { TrainsTabComponent } from './view/railvox-viewer/tab/trains-tab/trains-tab.component';
 import { TrainVariantTabComponent } from './view/railvox-viewer/tab/train-variant-tab/train-variant-tab.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
