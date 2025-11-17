@@ -32,6 +32,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import {MatListModule} from '@angular/material/list';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { FileDetailsTabComponent } from 'src/app/view/railvox-viewer/tab/file-details-tab/file-details-tab.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     CalendarViewComponent,
     TrainsTabComponent,
     TrainVariantTabComponent,
+    FileDetailsTabComponent,
   ],
   imports: [
     BrowserModule,
