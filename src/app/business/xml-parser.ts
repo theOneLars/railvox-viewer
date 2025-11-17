@@ -74,7 +74,6 @@ export class XmlParser {
             this.mapKISDZStammdatenNode(node)
             break
           default:
-          // console.log(node)
         }
       }
     }
@@ -97,7 +96,6 @@ export class XmlParser {
           break
         case 'TL':
           this.data.tagesLeistungen.push(this.mapTagesleistungNode(this.parseXml(this.buffer)))
-          console.log('pushed tl: ' + this.data.tagesLeistungen.length)
           this.insideTagesleistung = false
           this.buffer = ''
       }
@@ -105,7 +103,6 @@ export class XmlParser {
 
     parser.write(xml).close()
     this.postProcessTagesleistungen()
-    console.log(this.data.tagesLeistungen)
 
     // this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);  // done
     // this.data.spracheById = this.mapSprachen(parsedXML);   // done
