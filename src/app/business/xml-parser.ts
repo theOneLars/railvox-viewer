@@ -21,7 +21,9 @@ const moment = require('moment');
 export class XmlParser {
 
   insideMeldungListe = false;
+  insideTagesleistung = false;
   buffer = '';
+  // tagesleistungen: string[] = []
 
   data: TimetableData = new TimetableData();
 
@@ -34,10 +36,13 @@ export class XmlParser {
 
     parser.onopentag = (node) => {
 
-      if (this.insideMeldungListe) {
+      if (this.insideMeldungListe || this.insideTagesleistung) {
         this.appendOpeningNodeToBuffer(node)
       } else {
         switch (node.name) {
+          case 'TL':
+            this.mapTagesLeistungenNode(node)
+            break
           case 'MeldungListe':
             this.mapMeldungListeNode(node)
             break
@@ -52,7 +57,10 @@ export class XmlParser {
             break
           case 'BP':
             this.mapBetriebspunktNode(node)
-            break;
+            break
+          case 'SA':
+            this.mapStreckenabschnittNode(node)
+            break
           case 'Sprache':
             this.mapSprachNode(node)
             break;
@@ -75,7 +83,7 @@ export class XmlParser {
 
       if (typeof node === 'undefined') {
         // do nothing
-      } else if (this.insideMeldungListe) {
+      } else if (this.insideMeldungListe || this.insideTagesleistung) {
         this.appendClosingNodeToBuffer(node)
       }
 
@@ -83,15 +91,21 @@ export class XmlParser {
         case 'MeldungListe':
           this.insideMeldungListe = false
           let parsedMeldungen = this.parseXml(this.buffer)
+          this.buffer = ''
           // todo: change pattern of assignment inside the handling method
           this.data.meldungenById = this.mapMeldungen(parsedMeldungen)
           break
+        case 'TL':
+          this.data.tagesLeistungen.push(this.mapTagesleistungNode(this.parseXml(this.buffer)))
+          console.log('pushed tl: ' + this.data.tagesLeistungen.length)
+          this.insideTagesleistung = false
+          this.buffer = ''
       }
-
     }
 
     parser.write(xml).close()
-    console.log('meldungen: ', this.data.meldungenById.size)
+    this.postProcessTagesleistungen()
+    console.log(this.data.tagesLeistungen)
 
     // this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);  // done
     // this.data.spracheById = this.mapSprachen(parsedXML);   // done
@@ -102,8 +116,8 @@ export class XmlParser {
     //   ...this.mapBildMeldungVarianten(parsedXML)]);   // done
     // this.data.meldungenById = this.mapMeldungen(parsedXML);  // done
     // this.data.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
-    // this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML);
-    // this.data.title = this.mapTitle(parsedXML);
+    // this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML); // done
+    this.data.title = this.createTitle();
     return this.data;
   }
 
@@ -117,9 +131,9 @@ export class XmlParser {
     return fastXmlParser.parse(data, {});
   }
 
-  private mapTitle(parsedXML: any): string {
+  private createTitle(): string {
     let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode>this.data.verkehrsperiodeById.get([...this.data.verkehrsperiodeById.keys()][0]);
-    let result = parsedXML.KISDZStammdaten['@_fahrplanversion'] + ' - ' + parsedXML.KISDZStammdaten['@_zielsystem'];
+    let result = this.data.stammdaten.fahrplanversion + ' - ' + this.data.stammdaten.zielsystem;
     result += ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
     return result;
   }
@@ -206,6 +220,36 @@ export class XmlParser {
       result.set(streckenabschnitt['@_id'], new StreckenAbschnitt(streckenabschnitt['@_di']))
     })
     return result;
+  }
+
+  public mapTagesleistungNode(parsedXML: any) {
+      let zuege = this.ensureCollection(parsedXML.TL.Z);
+      let trains: Zug[] = [];
+      zuege.forEach((zug: any) => {
+        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'],
+          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode>this.data.verkehrsperiodeById.get(zug['@_vp_id']), this.mapFolgezugId(zug)));
+      });
+      return new Tagesleistung(trains, parsedXML.TL['@_nr']);
+  }
+
+  public postProcessTagesleistungen() {
+    let zugNummerById = new Map<string, string>();
+    this.data.tagesLeistungen
+      .flatMap(it => it.zuege)
+      .forEach(zug => zugNummerById.set(zug.id, zug.zugnummer))
+
+    this.data.tagesLeistungen.flatMap(tl => tl.zuege)
+      .forEach(zug => {
+        if (zug.hasFolgezug()) {
+          zug.folgezugNumber = <string>zugNummerById.get(zug.folgezugId);
+        }
+      })
+
+    this.data.tagesLeistungen.flatMap(tl => tl.zuege)
+      .flatMap(zug => zug.tractions)
+      .forEach(traktion => {
+        traktion.zugNummer = <string>zugNummerById.get(traktion.id);
+      });
   }
 
   public mapTagesLeistungen(parsedXML: any): Tagesleistung[] {
@@ -404,5 +448,19 @@ export class XmlParser {
 
   private appendClosingNodeToBuffer(node: any) {
     this.buffer += `</${node}>`
+  }
+
+  private mapStreckenabschnittNode(node: any) {
+    // todo: es gibt noch mehr Informationen auf den Streckenabschnitten, die gemapped werden könnten
+    this.data.streckenabschnitteById.set(node.attributes['id'], new StreckenAbschnitt(node.attributes['di']))
+  }
+
+  private mapTagesLeistungenNode(node: any) {
+    this.insideTagesleistung = true
+    this.buffer = ''
+    this.appendOpeningNodeToBuffer(node)
+    if (node.isSelfClosing) {
+      this.insideMeldungListe = false
+    }
   }
 }
