@@ -16,8 +16,6 @@ import * as sax from "sax";
 import {Stammdaten} from 'src/app/model/stammdaten';
 import {Fahrplan} from 'src/app/model/fahrplan';
 
-const moment = require('moment');
-
 export class XmlParser {
 
   insideMeldungListe = false;
@@ -28,8 +26,6 @@ export class XmlParser {
   data: TimetableData = new TimetableData();
 
   public parseExport(xml: string): TimetableData {
-    // let parsedXML = this.parseXml(xml);
-    // this.data = new TimetableData();
 
     let strict = true // set to false for html-mode
     var parser = sax.parser(strict)
@@ -103,17 +99,6 @@ export class XmlParser {
 
     parser.write(xml).close()
     this.postProcessTagesleistungen()
-
-    // this.data.betriebspunkById = this.mapBetriebspunkte(parsedXML);  // done
-    // this.data.spracheById = this.mapSprachen(parsedXML);   // done
-    // this.data.verkehrsperiodeById = this.mapVerkehrsperioden(parsedXML);      // done
-    // this.data.meldungVarianteById = new Map([
-    //   ...this.mapAudioMeldungVarianten(parsedXML),    // done
-    //   ...this.mapTextMeldungVarianten(parsedXML),     // done
-    //   ...this.mapBildMeldungVarianten(parsedXML)]);   // done
-    // this.data.meldungenById = this.mapMeldungen(parsedXML);  // done
-    // this.data.tagesLeistungen = this.mapTagesLeistungen(parsedXML);
-    // this.data.streckenabschnitteById = this.mapStreckenabschnitte(parsedXML); // done
     this.data.title = this.createTitle();
     return this.data;
   }
@@ -130,19 +115,11 @@ export class XmlParser {
 
   private createTitle(): string {
     let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode>this.data.verkehrsperiodeById.get([...this.data.verkehrsperiodeById.keys()][0]);
-    return this.data.stammdaten.fahrplanversion + ' - ' + this.data.stammdaten.zielsystem +
-    ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
-  }
-
-  public mapVerkehrsperioden(parsedXML: any): Map<string, Verkehrsperiode> {
-    let result = new Map<string, Verkehrsperiode>();
-    let validFrom = parsedXML.KISDZStammdaten.Fahrplan['@_gueltig_ab'];
-    let validTo = parsedXML.KISDZStammdaten.Fahrplan['@_gueltig_bis'];
-    let verkehrspersiden = this.ensureCollection(parsedXML.KISDZStammdaten.Fahrplan.VerkehrsperiodeListe.VP);
-    verkehrspersiden.forEach(vp => {
-      result.set(vp['@_id'], new Verkehrsperiode(vp['@_id'], vp['@_co'], validFrom, validTo, vp['@_fm']));
-    })
-    return result;
+    let title =  this.data.stammdaten.fahrplanversion + ' - ' + this.data.stammdaten.zielsystem;
+    if (verkehrsperiode) {
+      title += ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
+    }
+    return title
   }
 
   public mapVerkehrsperiodeNode(node: any) {
@@ -152,15 +129,6 @@ export class XmlParser {
       node.attributes['id'],
       new Verkehrsperiode(node.attributes['id'], node.attributes['co'], validFrom, validTo, node.attributes['fm'])
     )
-  }
-
-  public mapSprachen(parsedXML: any): Map<string, Sprache> {
-    let sprachen: any = this.ensureCollection(parsedXML.KISDZStammdaten.SprachenListe.Sprache);
-    let result = new Map<string, Sprache>();
-    sprachen.forEach((sprache: any) => {
-      result.set(sprache['@_id'], new Sprache(sprache['@_co'], sprache['@_be']));
-    })
-    return result;
   }
 
   public mapSprachNode(node: any) {
@@ -198,24 +166,8 @@ export class XmlParser {
     return (it: any) => typeof it !== 'undefined';
   }
 
-  public mapBetriebspunkte(parsedXML: any): Map<string, Betriebspunkt> {
-    let betriebspunkte: any = this.ensureCollection(parsedXML.KISDZStammdaten.Netz.BetriebspunktListe.BP);
-    let result = new Map<string, Betriebspunkt>();
-    betriebspunkte.forEach((it: any) => result.set(it['@_id'], new Betriebspunkt(it['@_name'], it['@_ak'])));
-    return result;
-  }
-
   public mapBetriebspunktNode(node: any) {
     this.data.betriebspunkById.set(node.attributes.id, new Betriebspunkt(node.attributes.name, node.attributes.ak))
-  }
-
-  public mapStreckenabschnitte(parsedXML: any): Map<string, StreckenAbschnitt> {
-    let streckenabschnitte: any = this.ensureCollection(parsedXML.KISDZStammdaten.Netz.StreckenabschnittListe.SA);
-    let result = new Map<string, StreckenAbschnitt>();
-    streckenabschnitte.forEach((streckenabschnitt: any) => {
-      result.set(streckenabschnitt['@_id'], new StreckenAbschnitt(streckenabschnitt['@_di']))
-    })
-    return result;
   }
 
   public mapTagesleistungNode(parsedXML: any) {
@@ -248,36 +200,6 @@ export class XmlParser {
       });
   }
 
-  public mapTagesLeistungen(parsedXML: any): Tagesleistung[] {
-    let tagesleistungen = this.ensureCollection(parsedXML.KISDZStammdaten.Fahrplan.TL);
-    let result: Tagesleistung[] = [];
-    let zugNummerById = new Map<string, string>();
-    for (let tagesleistung of tagesleistungen) {
-      let zuege = this.ensureCollection(tagesleistung.Z);
-      let trains: Zug[] = [];
-      zuege.forEach((zug: any) => {
-        zugNummerById.set(zug['@_id'], zug['@_zn']);
-        trains.push(new Zug(zug['@_dk'], zug['@_id'], zug['@_vp_id'], zug['@_zn'],
-          this.mapPassages(zug), this.mapTraktionen(zug), <Verkehrsperiode>this.data.verkehrsperiodeById.get(zug['@_vp_id']), this.mapFolgezugId(zug)));
-      });
-      let tl = new Tagesleistung(trains, tagesleistung['@_nr']);
-      result.push(tl);
-    }
-
-    result.flatMap(tl => tl.zuege)
-      .forEach(zug => {
-        if (zug.hasFolgezug()) {
-          zug.folgezugNumber = <string>zugNummerById.get(zug.folgezugId);
-        }
-      })
-
-    result.flatMap(tl => tl.zuege)
-      .flatMap(zug => zug.tractions)
-      .forEach(traktion => {
-        traktion.zugNummer = <string>zugNummerById.get(traktion.id);
-      });
-    return result;
-  }
 
   public mapTraktionen(zug: any): Traktion[] {
     let result: Traktion[] = [];
@@ -291,34 +213,6 @@ export class XmlParser {
           });
       }
     }
-    return result;
-  }
-
-  public mapAudioMeldungVarianten(parsedXML: any): Map<string, MeldungVariante> {
-    let result = new Map<string, MeldungVariante>();
-    let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.AudioVariantenListe.AV);
-    meldungen.forEach((meldung: any) => {
-      let meldungVariante = new MeldungVariante(VariantenType.AudioMeldung, meldung['@_fo'], meldung['@_dn'], '', this.data.spracheById.get(meldung['@_sp_id']));
-      result.set(meldung['@_id'], meldungVariante);
-    })
-    return result;
-  }
-
-  public mapBildMeldungVarianten(parsedXML: any): Map<string, MeldungVariante> {
-    let result = new Map<string, MeldungVariante>();
-    let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.BildVariantenListe.BV);
-    meldungen.forEach((meldung: any) => {
-      result.set(meldung['@_id'], new MeldungVariante(VariantenType.BildMeldung, meldung['@_fo'], meldung['@_dn'], ''));
-    })
-    return result;
-  }
-
-  public mapTextMeldungVarianten(parsedXML: any): Map<string, MeldungVariante> {
-    let result = new Map<string, MeldungVariante>();
-    let meldungen = this.ensureCollection(parsedXML.KISDZStammdaten.VariantenPool.TextVariantenListe.TV);
-    meldungen.forEach((meldung: any) => {
-      result.set(meldung['@_id'], new MeldungVariante(VariantenType.TextMeldung, '', '', meldung['@_tx']));
-    })
     return result;
   }
 

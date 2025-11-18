@@ -1,11 +1,11 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {RailvoxViewerComponent} from './railvox-viewer.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {MatLegacyCardModule as MatCardModule} from "@angular/material/legacy-card";
-import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
-import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/legacy-snack-bar";
+import {MatCardModule} from '@angular/material/card';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
-describe('RailvoxParserComponent', () => {
+describe('RailvoxViewerComponent', () => {
   let component: RailvoxViewerComponent;
   let fixture: ComponentFixture<RailvoxViewerComponent>;
 

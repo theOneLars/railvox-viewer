@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OperatingPeriodTabComponent } from './operating-period-tab.component';
+import {TimetableData} from 'src/app/business/timetable-data';
 
-describe('OperatingPeriodViewComponent', () => {
+describe('OperatingPeriodTabComponent', () => {
   let component: OperatingPeriodTabComponent;
   let fixture: ComponentFixture<OperatingPeriodTabComponent>;
 
@@ -14,6 +15,7 @@ describe('OperatingPeriodViewComponent', () => {
 
     fixture = TestBed.createComponent(OperatingPeriodTabComponent);
     component = fixture.componentInstance;
+    component.timetableData = new TimetableData()
     fixture.detectChanges();
   });
 
