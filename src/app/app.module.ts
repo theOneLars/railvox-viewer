@@ -33,6 +33,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/mater
 import {MatListModule} from '@angular/material/list';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { FileDetailsTabComponent } from 'src/app/view/railvox-viewer/tab/file-details-tab/file-details-tab.component';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { FileDetailsTabComponent } from 'src/app/view/railvox-viewer/tab/file-de
     MatMomentDateModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatTableModule,
   ],
   providers: [
     HttpClient,

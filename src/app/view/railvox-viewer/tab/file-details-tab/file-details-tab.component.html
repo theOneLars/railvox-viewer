@@ -1,61 +1,17 @@
 <div>
-  <mat-card>
-    <mat-card-subtitle>Informationen zum aktuellen Export</mat-card-subtitle>
-    <mat-card-content>
-      <table>
-        <tr>
-          <th></th>
-          <th></th>
-        </tr>
-        <tr>
-          <td>Gültig </td>
-          <td> {{ Verkehrsperiode.convertToDate(timetableData.fahrplan.gueltigAb).format("DD.MM.YYYY") }} - {{ Verkehrsperiode.convertToDate(timetableData.fahrplan.gueltigBis).format("DD.MM.YYYY") }}</td>
-        </tr>
-        <tr>
-          <td>Verkehrsperioden</td>
-          <td>{{ timetableData.verkehrsperiodeById.size }}</td>
-        </tr>
-        <tr>
-          <td>Tagesleistungen</td>
-          <td>{{ timetableData.tagesLeistungen.length }}</td>
-        </tr>
-        <tr>
-          <td>Betriebspunkte</td>
-          <td>{{ timetableData.betriebspunkById.size }}</td>
-        </tr>
-        <tr>
-          <td>Streckenabschnitte</td>
-          <td>{{ timetableData.streckenabschnitteById.size }}</td>
-        </tr>
-        <tr>
-          <td>Meldungsvarianten</td>
-          <td>{{ timetableData.meldungVarianteById.size }}</td>
-        </tr>
-        <tr>
-          <td>Meldungen</td>
-          <td>{{ timetableData.meldungenById.size }}</td>
-        </tr>
-        <tr>
-          <td>Sprachen</td>
-          <td>{{ timetableData.spracheById.size }}</td>
-        </tr>
-        <tr>
-          <td>Generiert am</td>
-          <td>{{ Verkehrsperiode.convertToDate(timetableData.stammdaten.erzeugt_am).format("DD.MM.YYYY") }}</td>
-        </tr>
-        <tr>
-          <td>Generiert von</td>
-          <td>{{ timetableData.stammdaten.erzeugtVon }}</td>
-        </tr>
-        <tr>
-          <td>Fahrplanversion</td>
-          <td>{{ timetableData.stammdaten.fahrplanversion }}</td>
-        </tr>
-        <tr>
-          <td>Zielsystem</td>
-          <td>{{ timetableData.stammdaten.zielsystem }}</td>
-        </tr>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="key">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">{{ element.key }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-    </mat-card-content>
-  </mat-card>
 </div>

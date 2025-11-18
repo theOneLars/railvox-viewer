@@ -4,9 +4,9 @@ export class Stammdaten {
   erzeugtVon: string;
   erzeugt_am: string;
   zielsystem: string
-  fahrplanversion: String
+  fahrplanversion: string
 
-  constructor(formatVersion: string, erzeugtVon: string, erzeugt_am: string, zielsystem: string, fahrplanversion: String) {
+  constructor(formatVersion: string, erzeugtVon: string, erzeugt_am: string, zielsystem: string, fahrplanversion: string) {
     this.formatVersion = formatVersion;
     this.erzeugtVon = erzeugtVon;
     this.erzeugt_am = erzeugt_am;
