@@ -1,5 +1,5 @@
 <file-drop *ngIf="!data"></file-drop>
-<span class="mat-title" *ngIf="data">{{ data.title }}</span>
+<div class="mat-headline-5 title" *ngIf="data">{{ data.title }}</div>
 <mat-tab-group animationDuration="0ms"
                *ngIf="data" mat-align-tabs="start" [(selectedIndex)]="tabindex">
   <mat-tab label="Züge">

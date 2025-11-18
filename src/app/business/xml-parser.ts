@@ -130,9 +130,8 @@ export class XmlParser {
 
   private createTitle(): string {
     let verkehrsperiode: Verkehrsperiode = <Verkehrsperiode>this.data.verkehrsperiodeById.get([...this.data.verkehrsperiodeById.keys()][0]);
-    let result = this.data.stammdaten.fahrplanversion + ' - ' + this.data.stammdaten.zielsystem;
-    result += ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
-    return result;
+    return this.data.stammdaten.fahrplanversion + ' - ' + this.data.stammdaten.zielsystem +
+    ' (' + verkehrsperiode.fromDate.format("DD.MM.YYYY") + ' - ' + verkehrsperiode.toDate.format("DD.MM.YYYY") + ')';
   }
 
   public mapVerkehrsperioden(parsedXML: any): Map<string, Verkehrsperiode> {
