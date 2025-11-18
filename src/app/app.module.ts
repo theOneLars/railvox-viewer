@@ -11,7 +11,6 @@ import {ZugViewComponent} from './view/railvox-viewer/tab/trains-tab/zug-view/zu
 import {PassageViewComponent} from './view/railvox-viewer/tab/trains-tab/passage-view/passage-view.component';
 import {TriggerViewComponent} from './view/railvox-viewer/tab/trains-tab/trigger-view/trigger-view.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
 import {MeldungViewComponent} from './view/railvox-viewer/tab/trains-tab/meldung-view/meldung-view.component';
 import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -20,7 +19,6 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
-import {MAT_LEGACY_SNACK_BAR_DEFAULT_OPTIONS as MAT_SNACK_BAR_DEFAULT_OPTIONS, MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/legacy-snack-bar";
 import { OperatingPeriodTabComponent } from './view/railvox-viewer/tab/operating-period-tab/operating-period-tab.component';
 import { CalendarViewComponent } from './view/railvox-viewer/tab/operating-period-tab/calendar-view/calendar-view.component';
 import { TrainsTabComponent } from './view/railvox-viewer/tab/trains-tab/trains-tab.component';
@@ -34,6 +32,8 @@ import {MatListModule} from '@angular/material/list';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { FileDetailsTabComponent } from 'src/app/view/railvox-viewer/tab/file-details-tab/file-details-tab.component';
 import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [

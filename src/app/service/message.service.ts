@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatLegacySnackBar as MatSnackBar} from "@angular/material/legacy-snack-bar";
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +9,10 @@ export class MessageService {
   constructor(private snackBar: MatSnackBar) { }
 
   public sendMessage(message: string): void {
-    this.snackBar.open(message, '', {
+    this.snackBar.open(message, 'OK', {
       horizontalPosition : 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-style']
+      panelClass: ['information']
     });
   }
 }
