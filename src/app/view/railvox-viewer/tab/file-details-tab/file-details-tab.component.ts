@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TimetableData} from 'src/app/business/timetable-data';
-import {Verkehrsperiode} from 'src/app/model/verkehrsperiode';
+import {DateFormatter} from 'src/app/util/date-formatter';
 
 @Component({
   selector: 'app-file-details-tab',
@@ -38,7 +38,7 @@ export class FileDetailsTabComponent implements OnInit{
   }
 
   formatDate(date: string): string {
-    return Verkehrsperiode.convertToDate(date).format("DD.MM.YYYY")
+    return DateFormatter.convertToDate(date).format("DD.MM.YYYY")
   }
 
 

@@ -1,7 +1,7 @@
 <file-drop *ngIf="!data"></file-drop>
-<span class="mat-title" *ngIf="data">{{this.data.title}}</span>
+<span class="mat-title" *ngIf="data">{{ data.title }}</span>
 <mat-tab-group animationDuration="0ms"
-  *ngIf="data" mat-align-tabs="start" [(selectedIndex)]="tabindex">
+               *ngIf="data" mat-align-tabs="start" [(selectedIndex)]="tabindex">
   <mat-tab label="Züge">
     <trains-overview [timetableData]="data"></trains-overview>
   </mat-tab>
@@ -12,6 +12,6 @@
     <train-variant-tab [timetableData]="data"></train-variant-tab>
   </mat-tab>
   <mat-tab label="Details">
-    <app-file-details-tab [timetableData]="data" *ngIf="data"></app-file-details-tab>
+    <app-file-details-tab [timetableData]="data"></app-file-details-tab>
   </mat-tab>
 </mat-tab-group>

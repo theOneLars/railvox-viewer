@@ -1,4 +1,5 @@
 import {Moment} from "moment";
+import {DateFormatter} from 'src/app/util/date-formatter';
 
 const moment = require('moment');
 
@@ -14,17 +15,10 @@ export class Verkehrsperiode {
   constructor(id: string, name: string, fromDate: string, toDate: string, bitMaske: string) {
     this.id = id;
     this.name = name;
-    this._fromDate = Verkehrsperiode.convertToDate(fromDate);
-    this._toDate = Verkehrsperiode.convertToDate(toDate);
+    this._fromDate = DateFormatter.convertToDate(fromDate);
+    this._toDate = DateFormatter.convertToDate(toDate);
     this.bitMaske = bitMaske;
     this.displayName = name + ' (' + id + ')';
-  }
-
-  public static convertToDate(date: string): Moment {
-    let year = Number(date.substring(0, 4));
-    let month = Number(date.substring(5, 7));
-    let day = Number(date.substring(8, 10));
-    return moment([year, month -1, day]);
   }
 
   public getNumberOfDays() {
