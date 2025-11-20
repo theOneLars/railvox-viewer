@@ -15,22 +15,41 @@ import {Verkehrsperiode} from "../model/verkehrsperiode";
 import * as sax from "sax";
 import {Stammdaten} from 'src/app/model/stammdaten';
 import {Fahrplan} from 'src/app/model/fahrplan';
+import {SAXParser} from 'sax';
 
 export class XmlParser {
 
-  insideMeldungListe = false;
-  insideTagesleistung = false;
-  buffer = '';
-  // tagesleistungen: string[] = []
+  private insideMeldungListe = false;
+  private insideTagesleistung = false;
+  private buffer = '';
+
+  private parser: SAXParser;
 
   data: TimetableData = new TimetableData();
 
+  constructor() {
+    this.initializeParser()
+  }
+
   public parseExport(xml: string): TimetableData {
+    this.parseChunk(xml)
+    this.finishParsing()
+    return this.data;
+  }
 
-    let strict = true // set to false for html-mode
-    var parser = sax.parser(strict)
+  public parseChunk(xml: string) {
+    this.parser.write(xml).close()
+  }
 
-    parser.onopentag = (node) => {
+  public finishParsing() {
+    this.postProcessTagesleistungen()
+    this.data.title = this.createTitle();
+  }
+
+  public initializeParser() {
+    this.parser = sax.parser(true)
+
+    this.parser.onopentag = (node) => {
 
       if (this.insideMeldungListe || this.insideTagesleistung) {
         this.appendOpeningNodeToBuffer(node)
@@ -74,7 +93,7 @@ export class XmlParser {
       }
     }
 
-    parser.onclosetag = (node: any) => {
+    this.parser.onclosetag = (node: any) => {
 
       if (typeof node === 'undefined') {
         // do nothing
@@ -96,12 +115,8 @@ export class XmlParser {
           this.buffer = ''
       }
     }
-
-    parser.write(xml).close()
-    this.postProcessTagesleistungen()
-    this.data.title = this.createTitle();
-    return this.data;
   }
+
 
   public parseXml(data: string) {
     const options = {
