@@ -6,7 +6,9 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RailvoxViewerComponent} from './view/railvox-viewer/railvox-viewer.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {TagesleistungViewComponent} from './view/railvox-viewer/tab/trains-tab/tagesleistung-view/tagesleistung-view.component';
+import {
+  TagesleistungViewComponent
+} from './view/railvox-viewer/tab/trains-tab/tagesleistung-view/tagesleistung-view.component';
 import {ZugViewComponent} from './view/railvox-viewer/tab/trains-tab/zug-view/zug-view.component';
 import {PassageViewComponent} from './view/railvox-viewer/tab/trains-tab/passage-view/passage-view.component';
 import {TriggerViewComponent} from './view/railvox-viewer/tab/trains-tab/trigger-view/trigger-view.component';
@@ -19,10 +21,14 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
-import { OperatingPeriodTabComponent } from './view/railvox-viewer/tab/operating-period-tab/operating-period-tab.component';
-import { CalendarViewComponent } from './view/railvox-viewer/tab/operating-period-tab/calendar-view/calendar-view.component';
-import { TrainsTabComponent } from './view/railvox-viewer/tab/trains-tab/trains-tab.component';
-import { TrainVariantTabComponent } from './view/railvox-viewer/tab/train-variant-tab/train-variant-tab.component';
+import {
+  OperatingPeriodTabComponent
+} from './view/railvox-viewer/tab/operating-period-tab/operating-period-tab.component';
+import {
+  CalendarViewComponent
+} from './view/railvox-viewer/tab/operating-period-tab/calendar-view/calendar-view.component';
+import {TrainsTabComponent} from './view/railvox-viewer/tab/trains-tab/trains-tab.component';
+import {TrainVariantTabComponent} from './view/railvox-viewer/tab/train-variant-tab/train-variant-tab.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
@@ -30,10 +36,13 @@ import {MatInputModule} from '@angular/material/input';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import {MatListModule} from '@angular/material/list';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { FileDetailsTabComponent } from 'src/app/view/railvox-viewer/tab/file-details-tab/file-details-tab.component';
+import {FileDetailsTabComponent} from 'src/app/view/railvox-viewer/tab/file-details-tab/file-details-tab.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {ProgressDialogComponent} from './view/railvox-viewer/progress-dialog/progress-dialog.component';
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -50,6 +59,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/materia
     TrainsTabComponent,
     TrainVariantTabComponent,
     FileDetailsTabComponent,
+    ProgressDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,12 +82,15 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/materia
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,
+    MatProgressBarModule,
+    MatDialogModule,
   ],
   providers: [
     HttpClient,
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 6000}},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
-    {provide: MAT_DATE_LOCALE, useValue: 'de-CH'}
+    {provide: MAT_DATE_LOCALE, useValue: 'de-CH'},
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
   ],
   bootstrap: [AppComponent]
 })

@@ -1,8 +1,8 @@
 export class InputFile {
 
-  content: string;
+  file: File;
 
-  constructor(content: string) {
-    this.content = content;
+  constructor(file: File) {
+    this.file = file;
   }
 }

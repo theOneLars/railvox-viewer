@@ -388,4 +388,25 @@ describe('XmlParser', () => {
     expect(actual.verkehrsperiodeById.get('1')).toEqual(new Verkehrsperiode('1', '22*', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000'));
     expect(actual.verkehrsperiodeById.get('2')).toEqual(new Verkehrsperiode('2', 'generated', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000020408102040810204081'));
   });
+
+  it('should parse parts of an export', () => {
+    let xml1 =
+      '<KISDZStammdaten>' +
+      '   <Fahrplan gueltig_ab="2021-12-12T00:00:00.000+01:00" gueltig_bis="2022-12-10T23:59:59.000+01:00">' +
+      '        <Verkehrspe'
+      let xml2 = 'riodeListe>' +
+      '           <VP id="1" co="22*" fm="0000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000"/>\n' +
+      '           <VP id="2" co="generated" fm="0000000000000000000000000000000000000000000000000000000000000000000000020408102040810204081"/>' +
+      '        </VerkehrsperiodeListe>   ' +
+      '   </Fahrplan>' +
+      '</KISDZStammdaten>';
+    let testee = new XmlParser();
+    testee.parseChunk(xml1)
+    testee.parseChunk(xml2)
+    let actual = testee.finishParsing();
+
+    expect(actual.verkehrsperiodeById).toHaveSize(2);
+    expect(actual.verkehrsperiodeById.get('1')).toEqual(new Verkehrsperiode('1', '22*', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000'));
+    expect(actual.verkehrsperiodeById.get('2')).toEqual(new Verkehrsperiode('2', 'generated', '2021-12-12T00:00:00.000+01:00', '2022-12-10T23:59:59.000+01:00', '0000000000000000000000000000000000000000000000000000000000000000000000020408102040810204081'));
+  });
 });

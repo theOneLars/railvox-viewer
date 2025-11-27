@@ -13,9 +13,9 @@ import {TimetableData} from "./timetable-data";
 import {Traktion} from "../model/traktion";
 import {Verkehrsperiode} from "../model/verkehrsperiode";
 import * as sax from "sax";
+import {SAXParser} from "sax";
 import {Stammdaten} from 'src/app/model/stammdaten';
 import {Fahrplan} from 'src/app/model/fahrplan';
-import {SAXParser} from 'sax';
 
 export class XmlParser {
 
@@ -33,17 +33,18 @@ export class XmlParser {
 
   public parseExport(xml: string): TimetableData {
     this.parseChunk(xml)
-    this.finishParsing()
-    return this.data;
+    return this.finishParsing()
   }
 
   public parseChunk(xml: string) {
-    this.parser.write(xml).close()
+    this.parser.write(xml)
   }
 
-  public finishParsing() {
+  public finishParsing(): TimetableData {
+    this.parser.close()
     this.postProcessTagesleistungen()
     this.data.title = this.createTitle();
+    return this.data;
   }
 
   public initializeParser() {

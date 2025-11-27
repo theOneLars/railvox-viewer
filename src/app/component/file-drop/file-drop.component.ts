@@ -15,8 +15,7 @@ export class FileDropComponent implements OnInit {
   }
 
   fileBrowserHandler(event: any) {
-    let files: FileList = event.files;
-    files[0].text().then((content: string) => this.fileUploadService.emitFile(new InputFile(content)));
+    this.fileUploadService.emitFile(new InputFile(event.files[0]))
   }
 
 }

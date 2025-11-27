@@ -24,6 +24,14 @@ module.exports = function (config) {
     jasmineHtmlReporter: {
       suppressAll: true // removes the duplicated traces
     },
+    files: [
+      {
+        pattern: 'src/test-data/export.xml',
+        watched: false,
+        served: true,
+        included: false
+      }
+    ],
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/railvox-viewer'),
       subdir: '.',
